@@ -55,7 +55,8 @@ def save_listings(listings):
         json.dump(listings, f, indent=2, ensure_ascii=False)
     
     # Save to JS for local HTML client-side loading
-    js_content = f"window.marketplaceListings = {json.dumps(list(listings.values()), indent=2, ensure_ascii=False)};"
+    js_content = f"window.marketplaceListings = {json.dumps(list(listings.values()), indent=2, ensure_ascii=False)};\n"
+    js_content += f"window.lastChecked = '{datetime.datetime.now().isoformat()}';"
     with open(DATA_JS_PATH, "w", encoding="utf-8") as f:
         f.write(js_content)
 

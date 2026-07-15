@@ -697,8 +697,10 @@
         const newCount = listings.filter(item => item.is_new).length;
         statNew.textContent = newCount;
 
-        // Find last sync time
-        if (listings.length > 0) {
+        // Find last sync time from window.lastChecked
+        if (window.lastChecked) {
+          statLastChecked.textContent = formatDate(window.lastChecked);
+        } else if (listings.length > 0) {
           const dates = listings.map(item => new Date(item.scraped_at));
           const latestDate = new Date(Math.max(...dates));
           statLastChecked.textContent = formatDate(latestDate.toISOString());
