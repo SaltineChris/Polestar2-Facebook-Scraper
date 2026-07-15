@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
+# Keep listings.json and listings.js because GitHub Pages needs listings.js to render!
