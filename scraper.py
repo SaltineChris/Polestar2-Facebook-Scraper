@@ -182,20 +182,22 @@ def scrape():
     print(f"Saved {len(updated_listings)} total listings to database.")
     
     # Auto-push data updates to GitHub so GitHub Pages dashboard is updated in real-time
-    import subprocess
-    try:
-        # Check if there are changes in listings files
-        status = subprocess.run(["git", "status", "--porcelain", DATA_JSON_PATH, DATA_JS_PATH], capture_output=True, text=True)
-        if status.stdout.strip():
-            print("Detected changes in listings data. Committing and pushing to GitHub...")
-            subprocess.run(["git", "add", DATA_JSON_PATH, DATA_JS_PATH], check=True)
-            subprocess.run(["git", "commit", "-m", "Auto-update listings data"], check=True)
-            subprocess.run(["git", "push"], check=True)
-            print("Successfully pushed updates to GitHub.")
-        else:
-            print("No data changes detected. Skipping git push.")
-    except Exception as e:
-        print(f"Git auto-push failed: {e}")
+    # Skip if running inside GitHub Actions (handled by the workflow runner instead)
+    if os.getenv("GITHUB_ACTIONS") != "true":
+        import subprocess
+        try:
+            # Check if there are changes in listings files
+            status = subprocess.run(["git", "status", "--porcelain", DATA_JSON_PATH, DATA_JS_PATH], capture_output=True, text=True)
+            if status.stdout.strip():
+                print("Detected changes in listings data. Committing and pushing to GitHub...")
+                subprocess.run(["git", "add", DATA_JSON_PATH, DATA_JS_PATH], check=True)
+                subprocess.run(["git", "commit", "-m", "Auto-update listings data"], check=True)
+                subprocess.run(["git", "push"], check=True)
+                print("Successfully pushed updates to GitHub.")
+            else:
+                print("No data changes detected. Skipping git push.")
+        except Exception as e:
+            print(f"Git auto-push failed: {e}")
         
     return new_additions
 

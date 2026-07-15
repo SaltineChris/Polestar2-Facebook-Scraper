@@ -1,0 +1,38 @@
+name: Daily Polestar 2 Scraper
+
+on:
+  schedule:
+    - cron: '0 21 * * *' # 9:00 AM New Zealand Time
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+permissions:
+  contents: write # Required to push listings data commits
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+
+      - name: Run Scraper
+        run: python scraper.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add listings.json listings.js
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update listings data [skip ci]" && git push)
