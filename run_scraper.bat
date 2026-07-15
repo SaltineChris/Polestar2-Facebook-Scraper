@@ -1,3 +1,3 @@
 @echo off
-cd /d "c:\Users\charc\Documents\Antigravity\Polestar 2 Scraper"
+cd /d "%~dp0"
 python scraper.py
