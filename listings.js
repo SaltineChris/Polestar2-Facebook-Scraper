@@ -159,7 +159,7 @@ window.marketplaceListings = [
     "id": "tm_6012566943",
     "raw_id": "6012566943",
     "title": "2022 Polestar 2 SRSM",
-    "price": "$33,950",
+    "price": "$32,500",
     "location": "Auckland City, Auckland",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6012566943",
     "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2315420787.jpg",
@@ -219,7 +219,7 @@ window.marketplaceListings = [
     "id": "tm_6003291653",
     "raw_id": "6003291653",
     "title": "2022 Polestar 2 Srsm",
-    "price": "$39,490",
+    "price": "$38,990",
     "location": "Porirua, Wellington",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6003291653",
     "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2314390330.jpg",
@@ -323,4 +323,4 @@ window.marketplaceListings = [
     "source": "facebook"
   }
 ];
-window.lastChecked = '2026-07-15T10:51:10.266473';
+window.lastChecked = '2026-07-15T22:01:34.498087';
