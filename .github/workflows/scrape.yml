@@ -2,7 +2,7 @@ name: Daily Polestar 2 Scraper
 
 on:
   schedule:
-    - cron: '0 9 */12 * *' # 9:00 AM New Zealand Time
+    - cron: '0 9,21 * * *' # 9:00 AM & 9:00 PM New Zealand Time
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 permissions:
