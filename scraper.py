@@ -1,9 +1,18 @@
 import os
+import sys
 import json
 import re
 import datetime
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
+
+# Reconfigure stdout to use UTF-8 (prevents encoding crashes on Windows terminals)
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
 
 # Define paths
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -37,6 +46,17 @@ def scrape():
     new_additions = []
     current_listings = {}
 
+    SEARCH_TARGETS = [
+        {
+            "name": "North Island (Auckland + 500km)",
+            "url": "https://www.facebook.com/marketplace/auckland/search/?query=polestar%202&exact=false&radius=500"
+        },
+        {
+            "name": "South Island (Christchurch + 500km)",
+            "url": "https://www.facebook.com/marketplace/christchurch/search/?query=polestar%202&exact=false&radius=500"
+        }
+    ]
+
     with sync_playwright() as p:
         # Launch browser with human-like configurations
         browser = p.chromium.launch(
@@ -56,101 +76,98 @@ def scrape():
             timezone_id="Pacific/Auckland"
         )
         
-        page = context.new_page()
-        
-        # Go to Facebook Marketplace search
-        print(f"Navigating to: {URL}")
-        page.goto(URL, wait_until="networkidle")
-        
-        # Wait a bit for page load
-        page.wait_for_timeout(5000)
-        
-        # Scroll down to load more results
-        print("Scrolling page to load more listings...")
-        page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
-        page.wait_for_timeout(3000)
-        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-        page.wait_for_timeout(3000)
+        for target in SEARCH_TARGETS:
+            print(f"Scraping location target: {target['name']}")
+            page = context.new_page()
+            
+            # Go to Facebook Marketplace search
+            print(f"Navigating to: {target['url']}")
+            try:
+                page.goto(target['url'], wait_until="networkidle", timeout=45000)
+                
+                # Wait a bit for page load
+                page.wait_for_timeout(5000)
+                
+                # Scroll down to load more results
+                print("Scrolling page to load more listings...")
+                page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
+                page.wait_for_timeout(3000)
+                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                page.wait_for_timeout(3000)
 
-        # Grab page HTML content
-        html_content = page.content()
-        
-        # Save HTML for debugging if needed
-        # with open(os.path.join(WORKSPACE_DIR, "debug_fb.html"), "w", encoding="utf-8") as f:
-        #    f.write(html_content)
+                # Grab page HTML content
+                html_content = page.content()
+                
+                # Parse with BeautifulSoup
+                soup = BeautifulSoup(html_content, "html.parser")
+                links = soup.find_all("a", href=re.compile(r"/marketplace/item/\d+"))
+                print(f"Found {len(links)} raw marketplace links for {target['name']}.")
+
+                for link in links:
+                    href = link.get("href")
+                    # Normalize URL
+                    if href.startswith("/"):
+                        href = "https://www.facebook.com" + href
+                    
+                    # Clean URL (remove query parameters)
+                    url_clean = href.split("?")[0]
+                    
+                    # Extract item ID
+                    match = re.search(r"/marketplace/item/(\d+)", url_clean)
+                    if not match:
+                        continue
+                    item_id = match.group(1)
+                    
+                    if item_id in current_listings:
+                        continue  # Avoid duplicate entries across runs
+                        
+                    # Extract Text lines inside the anchor tag
+                    text_content = link.get_text(separator="\n")
+                    lines = [line.strip() for line in text_content.split("\n") if line.strip()]
+                    
+                    # Extract Image URL
+                    img = link.find("img")
+                    img_url = img.get("src") if img else ""
+
+                    # Facebook Marketplace cards typically display:
+                    # Line 0: Price (e.g. $45,000 or NZ$45,000)
+                    # Line 1: Title (e.g. 2021 Polestar 2)
+                    # Line 2: Location (e.g. Auckland, NZ)
+                    price = "N/A"
+                    title = "Unknown Polestar 2"
+                    location = "Unknown"
+                    
+                    if len(lines) >= 1:
+                        price = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[0])
+                    if len(lines) >= 2:
+                        title = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[1])
+                    if len(lines) >= 3:
+                        location = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[2])
+                        
+                    if "polestar" not in title.lower():
+                        continue
+
+                    item_data = {
+                        "id": item_id,
+                        "title": title,
+                        "price": price,
+                        "location": location,
+                        "url": url_clean,
+                        "image": img_url,
+                        "scraped_at": datetime.datetime.now().isoformat(),
+                        "is_new": False
+                    }
+                    
+                    current_listings[item_id] = item_data
+            except Exception as e:
+                print(f"Error scraping {target['name']}: {e}")
+            finally:
+                page.close()
 
         browser.close()
 
-    # Parse with BeautifulSoup
-    soup = BeautifulSoup(html_content, "html.parser")
-    
-    # Facebook Marketplace links are to /marketplace/item/<id>/
-    links = soup.find_all("a", href=re.compile(r"/marketplace/item/\d+"))
-    print(f"Found {len(links)} raw marketplace links on the page.")
-
-    for link in links:
-        href = link.get("href")
-        # Normalize URL
-        if href.startswith("/"):
-            href = "https://www.facebook.com" + href
-        
-        # Clean URL (remove query parameters)
-        url_clean = href.split("?")[0]
-        
-        # Extract item ID
-        match = re.search(r"/marketplace/item/(\d+)", url_clean)
-        if not match:
-            continue
-        item_id = match.group(1)
-        
-        if item_id in current_listings:
-            continue  # Avoid duplicate entries on the page
-            
-        # Extract Text lines inside the anchor tag
-        text_content = link.get_text(separator="\n")
-        lines = [line.strip() for line in text_content.split("\n") if line.strip()]
-        
-        # Extract Image URL
-        img = link.find("img")
-        img_url = img.get("src") if img else ""
-
-        # Facebook Marketplace cards typically display:
-        # Line 0: Price (e.g. $45,000 or NZ$45,000)
-        # Line 1: Title (e.g. 2021 Polestar 2)
-        # Line 2: Location (e.g. Auckland, NZ)
-        # Line 3: Mileage/etc (sometimes present, e.g. 15K km)
-        price = "N/A"
-        title = "Unknown Polestar 2"
-        location = "Auckland"
-        
-        if len(lines) >= 1:
-            # First line is usually price
-            price = lines[0]
-        if len(lines) >= 2:
-            title = lines[1]
-        if len(lines) >= 3:
-            location = lines[2]
-            
-        # We only want Polestar 2 listings (filtering out accessories or non-Polestar 2 items if any)
-        # However, let's keep it broad and do a soft check, since the query was "polestar 2"
-        if "polestar" not in title.lower():
-            continue
-
-        item_data = {
-            "id": item_id,
-            "title": title,
-            "price": price,
-            "location": location,
-            "url": url_clean,
-            "image": img_url,
-            "scraped_at": datetime.datetime.now().isoformat(),
-            "is_new": False
-        }
-        
-        current_listings[item_id] = item_data
-
     # Compare with existing listings
-    print(f"Scraped {len(current_listings)} valid listings.")
+    print(f"Scraped {len(current_listings)} valid listings across all locations.")
     
     # Update listings. Set "is_new" to True for new listings
     updated_listings = {}
