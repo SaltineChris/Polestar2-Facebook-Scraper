@@ -261,7 +261,7 @@ window.marketplaceListings = [
     "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2308422757.jpg",
     "source": "trademe",
     "scraped_at": "2026-07-15T09:07:02.582361",
-    "is_new": true
+    "is_new": false
   },
   {
     "id": "fb_3889270561209349",
@@ -323,3 +323,4 @@ window.marketplaceListings = [
     "source": "facebook"
   }
 ];
+window.lastChecked = '2026-07-15T09:16:18.554829';
