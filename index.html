@@ -402,6 +402,30 @@
       box-shadow: var(--shadow-glow);
     }
 
+    .fav-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fav-btn:hover {
+      border-color: #ffd700;
+      color: #ffd700;
+    }
+    .fav-btn.active {
+      color: #ffd700;
+      border-color: rgba(255, 215, 0, 0.3);
+      background: rgba(255, 215, 0, 0.1);
+    }
+
     /* Empty state */
     .empty-state {
       padding: 4rem 2rem;
@@ -503,6 +527,7 @@
           <span class="filter-group-label">Filter:</span>
           <div class="filters" id="timeFilters">
             <button class="filter-btn active" data-filter="all">All Items</button>
+            <button class="filter-btn" data-filter="favorites">Favorites</button>
             <button class="filter-btn" data-filter="new">New Additions</button>
             <button class="filter-btn" data-filter="recent">Last 3 Days</button>
           </div>
@@ -562,6 +587,7 @@
       const refreshBtn = document.getElementById("refreshBtn");
 
       let listings = window.marketplaceListings || [];
+      let favorites = JSON.parse(localStorage.getItem('polestar_favorites') || '[]');
       let activeFilter = "all";
       let activeSource = "all";
       let searchQuery = "";
@@ -604,6 +630,8 @@
           if (activeFilter === "new" && !item.is_new) {
             return false;
           } else if (activeFilter === "recent" && !isWithinDays(item.scraped_at, 3)) {
+            return false;
+          } else if (activeFilter === "favorites" && !favorites.includes(item.id)) {
             return false;
           }
 
@@ -677,7 +705,10 @@
                 <div style="font-weight: 500;">${item.location}</div>
               </td>
               <td>
-                <a href="${item.url}" target="_blank" class="action-btn">View Listing</a>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button class="${favorites.includes(item.id) ? 'fav-btn active' : 'fav-btn'}" data-id="${item.id}" title="Toggle Favorite">${favorites.includes(item.id) ? '★' : '☆'}</button>
+                  <a href="${item.url}" target="_blank" class="action-btn">View Listing</a>
+                </div>
               </td>
             </tr>
           `;
@@ -733,6 +764,21 @@
           activeSource = btn.getAttribute("data-source");
           render();
         });
+      });
+
+      // Favorite Button Event Listener
+      body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.fav-btn');
+        if (btn) {
+          const id = btn.getAttribute('data-id');
+          if (favorites.includes(id)) {
+            favorites = favorites.filter(favId => favId !== id);
+          } else {
+            favorites.push(id);
+          }
+          localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
+          render();
+        }
       });
 
       // Refresh Button Event Listener
