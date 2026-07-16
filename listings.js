@@ -72,18 +72,6 @@ window.marketplaceListings = [
     "is_new": false
   },
   {
-    "id": "tm_6016081505",
-    "raw_id": "6016081505",
-    "title": "2022 Polestar 2 LRDM Plus 78Kwh/Ev",
-    "price": "$45,990",
-    "location": "Hamilton, Waikato",
-    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6016081505",
-    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2315847465.jpg",
-    "source": "trademe",
-    "scraped_at": "2026-07-15T13:35:16.605315",
-    "is_new": false
-  },
-  {
     "id": "tm_6003532593",
     "raw_id": "6003532593",
     "title": "2022 Polestar 2 LRSM 78KWH/ NZ NEW/ Pilot Lite Pack",
@@ -103,6 +91,18 @@ window.marketplaceListings = [
     "location": "Auckland, Auckland",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6003382156",
     "image": "https://trademe.tmcdn.co.nz/photoserver/full/2306945835.jpg",
+    "source": "trademe",
+    "scraped_at": "2026-07-15T13:35:16.605315",
+    "is_new": false
+  },
+  {
+    "id": "tm_6016081505",
+    "raw_id": "6016081505",
+    "title": "2022 Polestar 2 LRDM Plus 78Kwh/Ev",
+    "price": "$45,990",
+    "location": "Hamilton, Waikato",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6016081505",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2315847465.jpg",
     "source": "trademe",
     "scraped_at": "2026-07-15T13:35:16.605315",
     "is_new": false
@@ -323,4 +323,4 @@ window.marketplaceListings = [
     "source": "facebook"
   }
 ];
-window.lastChecked = '2026-07-16T02:14:30.343714+00:00';
+window.lastChecked = '2026-07-16T11:01:33.547264+00:00';
