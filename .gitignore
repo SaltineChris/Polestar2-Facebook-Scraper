@@ -5,3 +5,7 @@ venv/
 .idea/
 .vscode/
 # Keep listings.json and listings.js because GitHub Pages needs listings.js to render!
+# run_meta.json is generated locally by the scraper on the RPi, not tracked in git
+run_meta.json
+# Temporary file created by GitHub Actions fetch step
+listings_raw.json

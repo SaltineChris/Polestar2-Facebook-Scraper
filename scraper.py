@@ -49,14 +49,21 @@ def load_existing_listings():
             print(f"Error loading listings.json: {e}")
     return {}
 
-def save_listings(listings):
+RUN_META_PATH = os.path.join(WORKSPACE_DIR, "run_meta.json")
+
+def save_listings(listings, run_meta=None):
     # Save to JSON
     with open(DATA_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(listings, f, indent=2, ensure_ascii=False)
     
+    # Save run metadata (last scrape time, new counts by source)
+    if run_meta:
+        with open(RUN_META_PATH, "w", encoding="utf-8") as f:
+            json.dump(run_meta, f, indent=2, ensure_ascii=False)
+    
     # Save to JS for local HTML client-side loading
     js_content = f"window.marketplaceListings = {json.dumps(list(listings.values()), indent=2, ensure_ascii=False)};\n"
-    js_content += f"window.lastChecked = '{datetime.datetime.now(datetime.timezone.utc).isoformat()}';"
+    js_content += f"window.lastRunMeta = {json.dumps(run_meta or {}, indent=2, ensure_ascii=False)};"
     with open(DATA_JS_PATH, "w", encoding="utf-8") as f:
         f.write(js_content)
 
@@ -64,6 +71,7 @@ def scrape():
     print(f"Starting Polestar 2 scraper at {datetime.datetime.now().isoformat()}...")
     existing = load_existing_listings()
     new_additions = []
+    new_by_source = {"facebook": 0, "trademe": 0}
     current_listings = {}
 
     SEARCH_TARGETS = [
@@ -303,6 +311,8 @@ def scrape():
         if item_id not in existing:
             data["is_new"] = True
             new_additions.append(data)
+            source = data.get("source", "facebook")
+            new_by_source[source] = new_by_source.get(source, 0) + 1
             print(f"NEW LISTING FOUND [{data['source'].upper()}]: {data['title']} - {data['price']}")
         else:
             # Preserve scraped date of original discovery
@@ -317,13 +327,24 @@ def scrape():
             data["is_new"] = False
             updated_listings[item_id] = data
 
+    # Build run metadata
+    now_utc = datetime.datetime.now(datetime.timezone.utc)
+    run_meta = {
+        "last_scraped": now_utc.isoformat(),
+        "new_facebook": new_by_source.get("facebook", 0),
+        "new_trademe": new_by_source.get("trademe", 0),
+        "total_facebook": sum(1 for d in updated_listings.values() if d.get("source") == "facebook"),
+        "total_trademe": sum(1 for d in updated_listings.values() if d.get("source") == "trademe"),
+    }
+
     # Save to files
-    save_listings(updated_listings)
+    save_listings(updated_listings, run_meta)
     print(f"Saved {len(updated_listings)} total listings to database.")
     
     # Auto-push data updates to GitHub so GitHub Pages dashboard is updated in real-time
-    # Skip if running inside GitHub Actions (handled by the workflow runner instead)
-    if os.getenv("GITHUB_ACTIONS") != "true":
+    # Skipped if: running inside GitHub Actions, or SKIP_GIT_PUSH=1 is set (e.g. on RPi where
+    # GitHub Actions fetches from the REST API instead)
+    if os.getenv("GITHUB_ACTIONS") != "true" and os.getenv("SKIP_GIT_PUSH") != "1":
         import subprocess
         try:
             # Check if there are changes in listings files

@@ -132,6 +132,13 @@
       line-height: 1;
     }
 
+    .stat-sublabel {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      letter-spacing: 0.03em;
+    }
+
     /* Search and Filters */
     .controls-card {
       background: var(--bg-card);
@@ -505,11 +512,12 @@
         <span class="stat-value" id="statTradeMe" style="color: #fed7aa;">-</span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">New Today</span>
+        <span class="stat-label">New This Run</span>
         <span class="stat-value" id="statNew" style="color: #ff9a9e;">-</span>
+        <span class="stat-sublabel" id="statNewBreakdown"></span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">Last Checked</span>
+        <span class="stat-label">Last Scraped (NZT)</span>
         <span class="stat-value" id="statLastChecked" style="font-size: 1.05rem; line-height: 1.8;">-</span>
       </div>
     </div>
@@ -583,24 +591,28 @@
       const statFacebook = document.getElementById("statFacebook");
       const statTradeMe = document.getElementById("statTradeMe");
       const statNew = document.getElementById("statNew");
+      const statNewBreakdown = document.getElementById("statNewBreakdown");
       const statLastChecked = document.getElementById("statLastChecked");
       const refreshBtn = document.getElementById("refreshBtn");
 
       let listings = window.marketplaceListings || [];
+      const meta = window.lastRunMeta || {};
       let favorites = JSON.parse(localStorage.getItem('polestar_favorites') || '[]');
       let activeFilter = "all";
       let activeSource = "all";
       let searchQuery = "";
 
-      // Format Date nicely
+      // Format Date in NZT (Pacific/Auckland handles both NZST +12 and NZDST +13)
       function formatDate(isoString) {
         if (!isoString) return "N/A";
         const date = new Date(isoString);
-        return date.toLocaleDateString('en-NZ', { 
-          day: 'numeric', 
-          month: 'short', 
-          hour: '2-digit', 
-          minute: '2-digit' 
+        return date.toLocaleString('en-NZ', {
+          timeZone: 'Pacific/Auckland',
+          day: 'numeric',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
         });
       }
 
@@ -724,20 +736,18 @@
         
         const tmCount = listings.filter(item => item.source === "trademe").length;
         statTradeMe.textContent = tmCount;
-        
-        const newCount = listings.filter(item => item.is_new).length;
-        statNew.textContent = newCount;
 
-        // Find last sync time from window.lastChecked
-        if (window.lastChecked) {
-          statLastChecked.textContent = formatDate(window.lastChecked);
-        } else if (listings.length > 0) {
-          const dates = listings.map(item => new Date(item.scraped_at));
-          const latestDate = new Date(Math.max(...dates));
-          statLastChecked.textContent = formatDate(latestDate.toISOString());
-        } else {
-          statLastChecked.textContent = "Never";
+        // New this run — from lastRunMeta (written by scraper)
+        const newFb = meta.new_facebook ?? 0;
+        const newTm = meta.new_trademe ?? 0;
+        statNew.textContent = newFb + newTm;
+        if (statNewBreakdown) {
+          statNewBreakdown.textContent = `FB: ${newFb} · TM: ${newTm}`;
         }
+
+        // Last scraped time — in NZT, from lastRunMeta.last_scraped
+        const ts = meta.last_scraped || null;
+        statLastChecked.textContent = ts ? formatDate(ts) : "Never";
       }
 
       // Search Event Listener

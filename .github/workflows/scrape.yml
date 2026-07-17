@@ -1,41 +1,82 @@
-name: Daily Polestar 2 Scraper
+name: Fetch Polestar 2 Listings from RPi
 
 on:
   schedule:
-    - cron: '0 9,21 * * *' # 9:00 AM & 9:00 PM New Zealand Time
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+    - cron: '0 9,21 * * *'  # 9:00 AM & 9:00 PM NZST (UTC+12)
+  workflow_dispatch:         # Allow manual trigger from GitHub UI
 
 permissions:
-  contents: write # Required to push listings data commits
+  contents: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  scrape:
+  fetch-and-publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install dependencies
+      - name: Fetch listings from RPi API
+        env:
+          RPI_API_URL: ${{ secrets.RPI_API_URL }}
+          RPI_API_TOKEN: ${{ secrets.RPI_API_TOKEN }}
         run: |
-          pip install -r requirements.txt
-          playwright install chromium
+          echo "Fetching listings from RPi API..."
+          HTTP_STATUS=$(curl -o listings_raw.json -w "%{http_code}" -fsSL \
+            -H "Authorization: Bearer $RPI_API_TOKEN" \
+            -H "Accept: application/json" \
+            --connect-timeout 30 \
+            --max-time 60 \
+            "$RPI_API_URL/listings")
 
-      - name: Run Scraper
-        run: python scraper.py
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "RPi API returned HTTP $HTTP_STATUS — RPi may be offline."
+            echo "Skipping update to preserve existing listings data."
+            exit 0
+          fi
+
+          echo "Received response (HTTP $HTTP_STATUS). Processing..."
+
+          python3 << 'EOF'
+          import json, datetime, sys, os
+
+          with open('listings_raw.json') as f:
+              data = json.load(f)
+
+          listings = data.get('listings', [])
+          meta = data.get('meta', {})
+
+          if not listings:
+              print("API returned 0 listings — skipping update to preserve existing data.")
+              sys.exit(0)
+
+          # Write listings.json (dict keyed by ID, matching existing format)
+          keyed = {item['id']: item for item in listings}
+          with open('listings.json', 'w', encoding='utf-8') as f:
+              json.dump(keyed, f, indent=2, ensure_ascii=False)
+
+          # Regenerate listings.js with run metadata for the dashboard
+          now_utc = datetime.datetime.now(datetime.timezone.utc).isoformat()
+          meta['last_fetched_by_actions'] = now_utc  # When GH Actions fetched (for debugging)
+
+          js = 'window.marketplaceListings = ' + json.dumps(listings, indent=2, ensure_ascii=False) + ';\n'
+          js += 'window.lastRunMeta = ' + json.dumps(meta, indent=2) + ';'
+
+          with open('listings.js', 'w', encoding='utf-8') as f:
+              f.write(js)
+
+          fb = meta.get('new_facebook', 0)
+          tm = meta.get('new_trademe', 0)
+          print(f"Processed {len(listings)} listings. New: {fb} Facebook, {tm} TradeMe.")
+          EOF
 
       - name: Commit and push if data changed
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add listings.json listings.js
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update listings data [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || \
+            (git commit -m "Auto-update listings data [skip ci]" && git push)
