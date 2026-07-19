@@ -3,25 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Polestar 2 NZ Listings Tracker</title>
+  <title>Polestar 2 NZ Listings Tracker | CCS</title>
   
-  <!-- Modern Fonts -->
+  <!-- Premium Brand Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   
   <style>
+    /* Design System Custom Properties - CCS Option 1 Brand (Light) & Dark Theme */
     :root {
-      --bg-dark: #0a0e17;
-      --bg-card: rgba(18, 26, 42, 0.6);
+      --bg-main: #F5EEDC; /* Warm Parchment */
+      --bg-card: #FFFFFF;
+      --border-color: rgba(34, 61, 51, 0.15); /* Muted Mulberry Green */
+      --accent-color: #B8860B; /* Burnished Gold */
+      --accent-bg: #223D33; /* Mulberry Green */
+      --text-main: #36454F; /* Charcoal Grey */
+      --text-muted: #62727d;
+      --text-on-accent: #FFFFFF;
+      --font-display: 'Lora', serif;
+      --font-functional: 'Roboto', sans-serif;
+      --card-shadow: 0 8px 30px rgba(34, 61, 51, 0.06);
+      --new-badge-bg: rgba(184, 134, 11, 0.15);
+      --new-badge-text: #B8860B;
+      --tag-border: rgba(184, 134, 11, 0.3);
+      --transition-speed: 0.3s;
+    }
+
+    [data-theme="dark"] {
+      --bg-main: #000000; /* Midnight Black */
+      --bg-card: #121212;
       --border-color: rgba(255, 255, 255, 0.08);
-      --accent-color: #00e5ff; /* Electric cyan */
-      --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-      --new-tag-bg: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-      --new-tag-text: #7b1fa2;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --shadow-glow: 0 0 20px rgba(0, 229, 255, 0.15);
+      --accent-color: #B8860B; /* Burnished Gold */
+      --accent-bg: #1c322a; /* Darker Mulberry Green */
+      --text-main: #E5E7EB; /* Off-White */
+      --text-muted: #9CA3AF;
+      --text-on-accent: #FFFFFF;
+      --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      --new-badge-bg: rgba(184, 134, 11, 0.25);
+      --new-badge-text: #FBBF24;
+      --tag-border: rgba(255, 255, 255, 0.15);
     }
 
     * {
@@ -31,24 +52,21 @@
     }
 
     body {
-      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
+      font-family: var(--font-functional);
+      background-color: var(--bg-main);
       color: var(--text-main);
       line-height: 1.6;
       min-height: 100vh;
-      overflow-x: hidden;
       padding: 2rem 1.5rem;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
     }
 
-    /* Core Layout */
     .container {
       max-width: 1200px;
       margin: 0 auto;
     }
 
+    /* Header styling */
     header {
       display: flex;
       justify-content: space-between;
@@ -64,12 +82,16 @@
     }
 
     .brand h1 {
+      font-family: var(--font-display);
       font-size: 2.25rem;
       font-weight: 700;
-      letter-spacing: -0.025em;
-      background: linear-gradient(to right, #ffffff, #a5b4fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--accent-bg);
+      letter-spacing: -0.01em;
+      transition: color var(--transition-speed);
+    }
+
+    [data-theme="dark"] .brand h1 {
+      color: #FFFFFF;
     }
 
     .brand p {
@@ -78,47 +100,129 @@
       margin-top: 0.25rem;
     }
 
-    /* Stats Overview */
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    /* Buttons & Controls */
+    .btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-functional);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      transform: translateY(-1px);
+    }
+
+    .btn-accent {
+      background: var(--accent-bg);
+      color: var(--text-on-accent);
+      border: 1px solid transparent;
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-color);
+      color: #FFFFFF;
+    }
+
+    /* Tabs Layout */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-color);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--accent-color);
+      border-radius: 2px;
+    }
+
+    .tab-view {
+      display: none;
+    }
+
+    .tab-view.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Stats Overview Cards */
     .stats-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.25rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
 
     .stat-card {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.2s ease, border-color var(--transition-speed);
+      border-left: 4px solid var(--accent-bg);
     }
 
     .stat-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 229, 255, 0.3);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--accent-gradient);
+      transform: translateY(-3px);
+      border-color: var(--accent-color);
     }
 
     .stat-label {
       color: var(--text-muted);
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 500;
@@ -127,9 +231,10 @@
     .stat-value {
       font-size: 2rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--text-main);
       margin-top: 0.5rem;
-      line-height: 1;
+      line-height: 1.1;
+      font-family: var(--font-display);
     }
 
     .stat-sublabel {
@@ -139,50 +244,40 @@
       letter-spacing: 0.03em;
     }
 
-    /* Search and Filters */
+    /* Search and Filters Controls */
     .controls-card {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 1.25rem;
+      padding: 1.5rem;
       margin-bottom: 2rem;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
-    }
-
-    .controls-top {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
+      box-shadow: var(--card-shadow);
     }
 
     .search-box {
       position: relative;
       flex: 1;
-      min-width: 280px;
     }
 
     .search-box input {
       width: 100%;
-      background: rgba(10, 14, 23, 0.8);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 0.75rem 1rem 0.75rem 2.75rem;
-      color: #fff;
-      font-family: inherit;
+      color: var(--text-main);
+      font-family: var(--font-functional);
       font-size: 0.95rem;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
 
     .search-box input:focus {
       outline: none;
       border-color: var(--accent-color);
-      box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+      box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15);
     }
 
     .search-box::after {
@@ -199,8 +294,8 @@
       display: flex;
       flex-wrap: wrap;
       gap: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.25rem;
     }
 
     .filter-group {
@@ -212,7 +307,7 @@
     .filter-group-label {
       color: var(--text-muted);
       font-size: 0.85rem;
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -223,35 +318,33 @@
     }
 
     .filter-btn {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 0.5rem 1rem;
       border-radius: 8px;
       cursor: pointer;
-      font-family: inherit;
+      font-family: var(--font-functional);
       font-size: 0.85rem;
       font-weight: 500;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
 
     .filter-btn:hover, .filter-btn.active {
-      background: var(--accent-color);
-      color: #0a0e17;
-      border-color: var(--accent-color);
+      background: var(--accent-bg);
+      color: var(--text-on-accent);
+      border-color: var(--accent-bg);
       font-weight: 600;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
     }
 
-    /* Table & Card Wrapper */
+    /* Table & Container design */
     .table-container {
       background: var(--bg-card);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 3rem;
     }
 
     table {
@@ -261,14 +354,18 @@
     }
 
     th {
-      background: rgba(10, 14, 23, 0.5);
+      background: rgba(34, 61, 51, 0.04);
       padding: 1.25rem 1.5rem;
-      font-size: 0.875rem;
-      font-weight: 600;
+      font-size: 0.85rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border-color);
+    }
+
+    [data-theme="dark"] th {
+      background: rgba(255, 255, 255, 0.02);
     }
 
     td {
@@ -283,33 +380,38 @@
     }
 
     tr {
-      transition: background-color 0.2s;
+      transition: background-color 0.2s ease;
     }
 
     tr:hover {
+      background-color: rgba(34, 61, 51, 0.02);
+    }
+
+    [data-theme="dark"] tr:hover {
       background-color: rgba(255, 255, 255, 0.02);
     }
 
-    /* Listing elements style */
+    /* Listing components inside table */
     .listing-thumbnail {
       width: 90px;
       height: 60px;
       border-radius: 8px;
       object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-color);
+      background: var(--bg-main);
     }
 
     .thumbnail-fallback {
       width: 90px;
       height: 60px;
       border-radius: 8px;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      background: var(--bg-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
       font-size: 1.5rem;
+      color: var(--accent-color);
     }
 
     .listing-info {
@@ -324,11 +426,12 @@
     }
 
     .listing-title {
+      font-family: var(--font-display);
       font-size: 1.05rem;
       font-weight: 600;
-      color: #fff;
+      color: var(--text-main);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.2s ease;
     }
 
     .listing-title:hover {
@@ -339,7 +442,7 @@
     .listing-meta {
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 0.25rem;
+      margin-top: 0.35rem;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -350,9 +453,10 @@
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--accent-color);
+      font-family: var(--font-display);
     }
 
-    /* Tags */
+    /* Badges & Tags */
     .tag {
       font-size: 0.72rem;
       font-weight: 700;
@@ -364,24 +468,26 @@
     }
 
     .tag-new {
-      background: var(--new-tag-bg);
-      color: #1e1b4b;
-      box-shadow: 0 0 10px rgba(255, 154, 158, 0.2);
+      background: var(--new-badge-bg);
+      color: var(--new-badge-text);
     }
 
     .tag-source {
-      border: 1px solid currentColor;
+      border: 1px solid var(--tag-border);
       font-weight: 600;
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    [data-theme="dark"] .tag-source {
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .source-facebook {
-      background: rgba(24, 119, 242, 0.15);
       color: #3b5998;
-      border-color: rgba(24, 119, 242, 0.3);
+      border-color: rgba(59, 89, 152, 0.3);
     }
 
     .source-trademe {
-      background: rgba(255, 126, 0, 0.15);
       color: #ff7e00;
       border-color: rgba(255, 126, 0, 0.3);
     }
@@ -390,23 +496,21 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--bg-main);
       border: 1px solid var(--border-color);
-      color: #fff;
+      color: var(--text-main);
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 500;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
 
     .action-btn:hover {
-      background: var(--accent-gradient);
-      color: #0a0e17;
-      font-weight: 600;
-      border-color: transparent;
-      box-shadow: var(--shadow-glow);
+      background: var(--accent-bg);
+      color: var(--text-on-accent);
+      border-color: var(--accent-bg);
     }
 
     .fav-btn {
@@ -414,23 +518,102 @@
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 1.1rem;
-      width: 32px;
-      height: 32px;
+      font-size: 1.15rem;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
+
     .fav-btn:hover {
       border-color: #ffd700;
       color: #ffd700;
     }
+
     .fav-btn.active {
       color: #ffd700;
-      border-color: rgba(255, 215, 0, 0.3);
-      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.4);
+      background: rgba(255, 215, 0, 0.08);
+    }
+
+    /* Market Analytics CSS */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .analytics-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .analytics-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      color: var(--accent-bg);
+    }
+
+    [data-theme="dark"] .analytics-card h3 {
+      color: var(--text-main);
+    }
+
+    /* Text Histogram Bars */
+    .histogram-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .histogram-label {
+      width: 110px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .histogram-bar-wrapper {
+      flex: 1;
+      height: 16px;
+      background: var(--bg-main);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .histogram-bar {
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 8px;
+      width: 0;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .histogram-value {
+      width: 50px;
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
     }
 
     /* Empty state */
@@ -457,18 +640,19 @@
         align-items: flex-start;
         gap: 1rem;
       }
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
       
       th:nth-child(3), td:nth-child(3) {
-        display: none; /* Hide location column on small screens */
+        display: none; /* Hide location on small screens */
       }
       
-      .controls-card {
-        align-items: stretch;
-      }
-
       .filter-group-container {
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.25rem;
       }
       
       .filters {
@@ -490,10 +674,11 @@
     <header>
       <div class="brand">
         <h1>Polestar 2 NZ Tracker</h1>
-        <p>Facebook Marketplace & TradeMe Motor Aggregator</p>
+        <p>Facebook Marketplace & TradeMe Motors Aggregator</p>
       </div>
-      <div>
-        <button class="filter-btn" id="refreshBtn">🔄 Refresh Data</button>
+      <div class="header-actions">
+        <button class="btn" id="themeToggleBtn">☀ Premium Light</button>
+        <button class="btn btn-accent" id="refreshBtn">🔄 Refresh Data</button>
       </div>
     </header>
 
@@ -522,67 +707,150 @@
       </div>
     </div>
 
-    <!-- Search & Filters -->
-    <div class="controls-card">
-      <div class="controls-top">
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search by title, price, or location...">
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="listings">📋 Listings Feed</button>
+      <button class="tab-btn" data-tab="analytics">📊 Market Analytics</button>
+    </div>
+
+    <!-- View 1: Listings Feed -->
+    <div id="listingsView" class="tab-view active">
+      <!-- Search & Filters -->
+      <div class="controls-card">
+        <div class="controls-top">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by title, price, or location...">
+          </div>
+        </div>
+        
+        <div class="filter-group-container">
+          <div class="filter-group">
+            <span class="filter-group-label">Filter:</span>
+            <div class="filters" id="timeFilters">
+              <button class="filter-btn active" data-filter="all">All Items</button>
+              <button class="filter-btn" data-filter="favorites">Favorites</button>
+              <button class="filter-btn" data-filter="new">New Additions</button>
+              <button class="filter-btn" data-filter="recent">Last 3 Days</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-group-label">Source:</span>
+            <div class="filters" id="sourceFilters">
+              <button class="filter-btn active" data-source="all">All Sources</button>
+              <button class="filter-btn" data-source="facebook">Facebook</button>
+              <button class="filter-btn" data-source="trademe">TradeMe</button>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="filter-group-container">
-        <div class="filter-group">
-          <span class="filter-group-label">Filter:</span>
-          <div class="filters" id="timeFilters">
-            <button class="filter-btn active" data-filter="all">All Items</button>
-            <button class="filter-btn" data-filter="favorites">Favorites</button>
-            <button class="filter-btn" data-filter="new">New Additions</button>
-            <button class="filter-btn" data-filter="recent">Last 3 Days</button>
-          </div>
-        </div>
 
-        <div class="filter-group">
-          <span class="filter-group-label">Source:</span>
-          <div class="filters" id="sourceFilters">
-            <button class="filter-btn active" data-source="all">All Sources</button>
-            <button class="filter-btn" data-source="facebook">Facebook</button>
-            <button class="filter-btn" data-source="trademe">TradeMe</button>
-          </div>
-        </div>
+      <!-- Listings Table -->
+      <div class="table-container">
+        <table id="listingsTable">
+          <thead>
+            <tr>
+              <th>Vehicle Details</th>
+              <th>Price</th>
+              <th>Location</th>
+              <th style="width: 150px;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="listingsBody">
+            <tr>
+              <td colspan="4" class="empty-state">
+                <div class="empty-icon">⏳</div>
+                <p>Loading listings data...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Listings Table -->
-    <div class="table-container">
-      <table id="listingsTable">
-        <thead>
-          <tr>
-            <th>Vehicle Details</th>
-            <th>Price</th>
-            <th>Location</th>
-            <th style="width: 120px;">Action</th>
-          </tr>
-        </thead>
-        <tbody id="listingsBody">
-          <!-- Dynamically inserted listings -->
-          <tr>
-            <td colspan="4" class="empty-state">
-              <div class="empty-icon">⏳</div>
-              <p>Loading listings data...</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- View 2: Market Analytics -->
+    <div id="analyticsView" class="tab-view">
+      <div class="analytics-grid">
+        
+        <!-- Table Card: Model Variant Metrics -->
+        <div class="analytics-card" style="grid-column: span 2;">
+          <h3>Model Variant Price Breakdown</h3>
+          <div class="table-container" style="border: none; box-shadow: none; margin-bottom: 0;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Model Variant</th>
+                  <th>Total Active</th>
+                  <th>Min Price</th>
+                  <th>Median Price</th>
+                  <th>Average Price</th>
+                  <th>Max Price</th>
+                </tr>
+              </thead>
+              <tbody id="analyticsModelBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Price Range Histogram -->
+        <div class="analytics-card">
+          <h3>Price Range Distribution</h3>
+          <div id="priceDistributionContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Depreciation Curve By Model Year -->
+        <div class="analytics-card">
+          <h3>Depreciation Profile (Avg Price by Year)</h3>
+          <div id="depreciationYearContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Regional Listings Share -->
+        <div class="analytics-card">
+          <h3>Top Regions Breakdown</h3>
+          <div id="regionalBreakdownContainer">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Platform Comparison Stats -->
+        <div class="analytics-card">
+          <h3>Platform Comparison Metrics</h3>
+          <div class="table-container" style="border: none; box-shadow: none; margin-bottom: 0;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Listings</th>
+                  <th>Avg Price</th>
+                  <th>Median Price</th>
+                  <th>Share %</th>
+                </tr>
+              </thead>
+              <tbody id="analyticsPlatformBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
     </div>
+
   </div>
 
-  <!-- Data Script -->
+  <!-- Data Script (written by scraper.py) -->
   <script src="listings.js"></script>
 
-  <!-- Controller Logic -->
+  <!-- Application Controller Logic -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Elements
+      // DOM Elements
       const body = document.getElementById("listingsBody");
       const searchInput = document.getElementById("searchInput");
       const timeFilterBtns = document.querySelectorAll("#timeFilters .filter-btn");
@@ -594,7 +862,18 @@
       const statNewBreakdown = document.getElementById("statNewBreakdown");
       const statLastChecked = document.getElementById("statLastChecked");
       const refreshBtn = document.getElementById("refreshBtn");
+      
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const tabViews = document.querySelectorAll(".tab-view");
+      
+      const analyticsModelBody = document.getElementById("analyticsModelBody");
+      const analyticsPlatformBody = document.getElementById("analyticsPlatformBody");
+      const priceDistributionContainer = document.getElementById("priceDistributionContainer");
+      const depreciationYearContainer = document.getElementById("depreciationYearContainer");
+      const regionalBreakdownContainer = document.getElementById("regionalBreakdownContainer");
 
+      // State Management
       let listings = window.marketplaceListings || [];
       const meta = window.lastRunMeta || {};
       let favorites = JSON.parse(localStorage.getItem('polestar_favorites') || '[]');
@@ -602,7 +881,58 @@
       let activeSource = "all";
       let searchQuery = "";
 
-      // Format Date in NZT (Pacific/Auckland handles both NZST +12 and NZDST +13)
+      // Theme toggle initialization
+      let currentTheme = localStorage.getItem("polestar_theme") || "light";
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      updateThemeButtonUI();
+
+      themeToggleBtn.addEventListener("click", () => {
+        currentTheme = currentTheme === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        localStorage.setItem("polestar_theme", currentTheme);
+        updateThemeButtonUI();
+      });
+
+      function updateThemeButtonUI() {
+        if (currentTheme === "dark") {
+          themeToggleBtn.innerHTML = "☀ Premium Light";
+        } else {
+          themeToggleBtn.innerHTML = "☾ Midnight Dark";
+        }
+      }
+
+      // Tab switcher logic
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetTab = btn.getAttribute("data-tab");
+          tabBtns.forEach(b => b.classList.remove("active"));
+          tabViews.forEach(v => v.classList.remove("active"));
+          
+          btn.classList.add("active");
+          document.getElementById(`${targetTab}View`).classList.add("active");
+          
+          if (targetTab === "analytics") {
+            calculateAndRenderAnalytics();
+          }
+        });
+      });
+
+      // Favorites Event Listener delegation
+      body.addEventListener('click', (e) => {
+        const btn = e.target.closest('.fav-btn');
+        if (btn) {
+          const id = btn.getAttribute('data-id');
+          if (favorites.includes(id)) {
+            favorites = favorites.filter(favId => favId !== id);
+          } else {
+            favorites.push(id);
+          }
+          localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
+          render();
+        }
+      });
+
+      // Format Date in NZT
       function formatDate(isoString) {
         if (!isoString) return "N/A";
         const date = new Date(isoString);
@@ -616,7 +946,34 @@
         });
       }
 
-      // Check if item was added within N days
+      // Format currency to NZD
+      function formatCurrency(amount) {
+        if (!amount || isNaN(amount)) return "N/A";
+        return new Intl.NumberFormat('en-NZ', {
+          style: 'currency',
+          currency: 'NZD',
+          maximumFractionDigits: 0
+        }).format(amount);
+      }
+
+      // Parse price to numeric value
+      function parsePrice(priceStr) {
+        if (!priceStr || priceStr === "N/A") return null;
+        const num = parseInt(priceStr.replace(/[^0-9]/g, ""), 10);
+        return isNaN(num) ? null : num;
+      }
+
+      // Helper to classify Polestar 2 Model Variants
+      function classifyModel(title) {
+        const t = title.toLowerCase();
+        if (t.includes("performance")) return "Performance";
+        if (t.includes("lrdm") || t.includes("dual motor") || t.includes("long range dual")) return "LRDM";
+        if (t.includes("lrsm") || t.includes("long range single") || t.includes("long range")) return "LRSM";
+        if (t.includes("srsm") || t.includes("standard range single") || t.includes("standard range")) return "SRSM";
+        return "Unspecified";
+      }
+
+      // Check date range
       function isWithinDays(isoString, days) {
         if (!isoString) return false;
         const date = new Date(isoString);
@@ -626,11 +983,9 @@
         return diffDays <= days;
       }
 
-      // Render Listings Table
+      // Render Listings Tab
       function render() {
-        // Filter & Search Logic
         const filtered = listings.filter(item => {
-          // Search Query Match
           const matchesSearch = 
             item.title.toLowerCase().includes(searchQuery) ||
             item.price.toLowerCase().includes(searchQuery) ||
@@ -638,24 +993,15 @@
 
           if (!matchesSearch) return false;
 
-          // Category Filters
-          if (activeFilter === "new" && !item.is_new) {
-            return false;
-          } else if (activeFilter === "recent" && !isWithinDays(item.scraped_at, 3)) {
-            return false;
-          } else if (activeFilter === "favorites" && !favorites.includes(item.id)) {
-            return false;
-          }
+          if (activeFilter === "new" && !item.is_new) return false;
+          if (activeFilter === "recent" && !isWithinDays(item.scraped_at, 3)) return false;
+          if (activeFilter === "favorites" && !favorites.includes(item.id)) return false;
 
-          // Source Filters
-          if (activeSource !== "all" && item.source !== activeSource) {
-            return false;
-          }
+          if (activeSource !== "all" && item.source !== activeSource) return false;
 
           return true;
         });
 
-        // Sort by scraped date (newest first)
         filtered.sort((a, b) => new Date(b.scraped_at) - new Date(a.scraped_at));
 
         if (filtered.length === 0) {
@@ -663,7 +1009,7 @@
             <tr>
               <td colspan="4" class="empty-state">
                 <div class="empty-icon">🚗</div>
-                <p>No Polestar 2 vehicles found matching your filters.</p>
+                <p>No Polestar 2 vehicles found matching the filters.</p>
               </td>
             </tr>
           `;
@@ -671,7 +1017,6 @@
         }
 
         body.innerHTML = filtered.map(item => {
-          // Detect image fallback
           const imageEl = item.image 
             ? `<img class="listing-thumbnail" src="${item.image}" referrerpolicy="no-referrer" alt="${item.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
             : '';
@@ -682,15 +1027,11 @@
             </div>
           `;
 
-          // Generate "New" badge
-          const newBadge = item.is_new 
-            ? `<span class="tag tag-new">New</span>` 
-            : '';
-
-          // Generate Source badge
+          const newBadge = item.is_new ? `<span class="tag tag-new">New</span>` : '';
           const sourceText = item.source === "facebook" ? "Facebook" : "TradeMe";
           const sourceClass = item.source === "facebook" ? "source-facebook" : "source-trademe";
           const sourceBadge = `<span class="tag tag-source ${sourceClass}">${sourceText}</span>`;
+          const isFav = favorites.includes(item.id);
 
           return `
             <tr>
@@ -718,7 +1059,9 @@
               </td>
               <td>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button class="${favorites.includes(item.id) ? 'fav-btn active' : 'fav-btn'}" data-id="${item.id}" title="Toggle Favorite">${favorites.includes(item.id) ? '★' : '☆'}</button>
+                  <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${item.id}" title="Toggle Favorite">
+                    ${isFav ? '★' : '☆'}
+                  </button>
                   <a href="${item.url}" target="_blank" class="action-btn">View Listing</a>
                 </div>
               </td>
@@ -727,7 +1070,7 @@
         }).join("");
       }
 
-      // Update Statistics
+      // Update Statistics Header Panel
       function updateStats() {
         statTotal.textContent = listings.length;
         
@@ -737,7 +1080,6 @@
         const tmCount = listings.filter(item => item.source === "trademe").length;
         statTradeMe.textContent = tmCount;
 
-        // New this run — from lastRunMeta (written by scraper)
         const newFb = meta.new_facebook ?? 0;
         const newTm = meta.new_trademe ?? 0;
         statNew.textContent = newFb + newTm;
@@ -745,18 +1087,183 @@
           statNewBreakdown.textContent = `FB: ${newFb} · TM: ${newTm}`;
         }
 
-        // Last scraped time — in NZT, from lastRunMeta.last_scraped
         const ts = meta.last_scraped || null;
         statLastChecked.textContent = ts ? formatDate(ts) : "Never";
       }
 
-      // Search Event Listener
+      // Market Analytics View Calculation & Rendering
+      function calculateAndRenderAnalytics() {
+        if (listings.length === 0) return;
+
+        // Group listings with parsed prices
+        const analyzed = listings.map(item => ({
+          ...item,
+          numericPrice: parsePrice(item.price),
+          variant: classifyModel(item.title),
+          year: parseInt((item.title.match(/\b(202\d)\b/) || [])[0], 10) || null
+        }));
+
+        // Helper to calculate statistics
+        function getStats(items) {
+          const prices = items.map(i => i.numericPrice).filter(p => p !== null).sort((a, b) => a - b);
+          if (prices.length === 0) {
+            return { count: items.length, avg: 0, median: 0, min: 0, max: 0 };
+          }
+          const sum = prices.reduce((a, b) => a + b, 0);
+          const avg = sum / prices.length;
+          
+          let median;
+          const mid = Math.floor(prices.length / 2);
+          if (prices.length % 2 !== 0) {
+            median = prices[mid];
+          } else {
+            median = (prices[mid - 1] + prices[mid]) / 2;
+          }
+
+          return {
+            count: items.length,
+            avg: Math.round(avg),
+            median: Math.round(median),
+            min: prices[0],
+            max: prices[prices.length - 1]
+          };
+        }
+
+        // 1. Render Model Variants
+        const variants = ["SRSM", "LRSM", "LRDM", "Performance", "Unspecified"];
+        const variantRows = variants.map(v => {
+          const items = analyzed.filter(i => i.variant === v);
+          const s = getStats(items);
+          return `
+            <tr>
+              <td style="font-weight: 600;">${v === 'Unspecified' ? 'Other/Unspecified' : v}</td>
+              <td>${s.count}</td>
+              <td style="color: var(--text-muted);">${s.min > 0 ? formatCurrency(s.min) : 'N/A'}</td>
+              <td style="color: var(--accent-color); font-weight: 600;">${s.median > 0 ? formatCurrency(s.median) : 'N/A'}</td>
+              <td>${s.avg > 0 ? formatCurrency(s.avg) : 'N/A'}</td>
+              <td style="color: var(--text-muted);">${s.max > 0 ? formatCurrency(s.max) : 'N/A'}</td>
+            </tr>
+          `;
+        });
+
+        // Add overall market row at the end
+        const overall = getStats(analyzed);
+        variantRows.push(`
+          <tr style="border-top: 2px solid var(--border-color); background: rgba(184,134,11,0.05); font-weight:700;">
+            <td>Overall Market</td>
+            <td>${overall.count}</td>
+            <td>${formatCurrency(overall.min)}</td>
+            <td style="color: var(--accent-color);">${formatCurrency(overall.median)}</td>
+            <td>${formatCurrency(overall.avg)}</td>
+            <td>${formatCurrency(overall.max)}</td>
+          </tr>
+        `);
+        analyticsModelBody.innerHTML = variantRows.join("");
+
+        // 2. Render Price Distribution Histogram
+        const prices = analyzed.map(i => i.numericPrice).filter(p => p !== null);
+        const ranges = [
+          { label: "Under $35k", check: p => p < 35000 },
+          { label: "$35k - $42k", check: p => p >= 35000 && p < 42000 },
+          { label: "$42k - $50k", check: p => p >= 42000 && p < 50000 },
+          { label: "$50k - $65k", check: p => p >= 50000 && p < 65000 },
+          { label: "$65k+", check: p => p >= 65000 }
+        ];
+
+        let maxCount = 0;
+        const rangeCounts = ranges.map(r => {
+          const count = prices.filter(r.check).length;
+          if (count > maxCount) maxCount = count;
+          return { label: r.label, count };
+        });
+
+        priceDistributionContainer.innerHTML = rangeCounts.map(r => {
+          const pct = maxCount > 0 ? (r.count / maxCount) * 100 : 0;
+          return `
+            <div class="histogram-row">
+              <span class="histogram-label">${r.label}</span>
+              <div class="histogram-bar-wrapper">
+                <div class="histogram-bar" style="width: ${pct}%"></div>
+              </div>
+              <span class="histogram-value">${r.count}</span>
+            </div>
+          `;
+        }).join("");
+
+        // 3. Render Depreciation By Year
+        const years = [2021, 2022, 2023, 2024, 2025, 2026];
+        const yearStats = years.map(yr => {
+          const items = analyzed.filter(i => i.year === yr);
+          const s = getStats(items);
+          return { year: yr, ...s };
+        }).filter(y => y.count > 0);
+
+        let maxYearAvg = Math.max(...yearStats.map(y => y.avg), 1);
+        depreciationYearContainer.innerHTML = yearStats.map(y => {
+          const pct = (y.avg / maxYearAvg) * 100;
+          return `
+            <div class="histogram-row">
+              <span class="histogram-label" style="width: 60px;">${y.year}</span>
+              <div class="histogram-bar-wrapper">
+                <div class="histogram-bar" style="width: ${pct}%; background: var(--accent-bg);"></div>
+              </div>
+              <span class="histogram-value" style="width: 90px; text-align:right;">${formatCurrency(y.avg)}</span>
+            </div>
+          `;
+        }).join("");
+
+        // 4. Regional Distribution
+        const locationMap = {};
+        analyzed.forEach(i => {
+          const loc = i.location.split(",").pop().trim();
+          if (loc && loc !== "Unknown") {
+            locationMap[loc] = (locationMap[loc] || 0) + 1;
+          }
+        });
+
+        const sortedLocations = Object.entries(locationMap)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5); // top 5 regions
+
+        let maxLocCount = sortedLocations.length > 0 ? sortedLocations[0][1] : 1;
+        regionalBreakdownContainer.innerHTML = sortedLocations.map(([name, count]) => {
+          const pct = (count / maxLocCount) * 100;
+          return `
+            <div class="histogram-row">
+              <span class="histogram-label" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${name}">${name}</span>
+              <div class="histogram-bar-wrapper">
+                <div class="histogram-bar" style="width: ${pct}%; background: var(--accent-color);"></div>
+              </div>
+              <span class="histogram-value">${count}</span>
+            </div>
+          `;
+        }).join("");
+
+        // 5. Platform Comparison
+        const sources = ["facebook", "trademe"];
+        analyticsPlatformBody.innerHTML = sources.map(src => {
+          const items = analyzed.filter(i => i.source === src);
+          const s = getStats(items);
+          const share = listings.length > 0 ? Math.round((items.length / listings.length) * 100) : 0;
+          return `
+            <tr>
+              <td style="font-weight: 600; text-transform: capitalize;">${src === 'trademe' ? 'TradeMe' : 'Facebook'}</td>
+              <td>${s.count}</td>
+              <td>${s.avg > 0 ? formatCurrency(s.avg) : 'N/A'}</td>
+              <td style="color: var(--accent-color); font-weight: 600;">${s.median > 0 ? formatCurrency(s.median) : 'N/A'}</td>
+              <td>${share}%</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // Search event listener
       searchInput.addEventListener("input", (e) => {
         searchQuery = e.target.value.toLowerCase().trim();
         render();
       });
 
-      // Time Filter Buttons Event Listener
+      // Time Filter buttons event listener
       timeFilterBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
           timeFilterBtns.forEach(b => b.classList.remove("active"));
@@ -766,7 +1273,7 @@
         });
       });
 
-      // Source Filter Buttons Event Listener
+      // Source Filter buttons event listener
       sourceFilterBtns.forEach(btn => {
         btn.addEventListener("click", (e) => {
           sourceFilterBtns.forEach(b => b.classList.remove("active"));
@@ -774,21 +1281,6 @@
           activeSource = btn.getAttribute("data-source");
           render();
         });
-      });
-
-      // Favorite Button Event Listener
-      body.addEventListener('click', (e) => {
-        const btn = e.target.closest('.fav-btn');
-        if (btn) {
-          const id = btn.getAttribute('data-id');
-          if (favorites.includes(id)) {
-            favorites = favorites.filter(favId => favId !== id);
-          } else {
-            favorites.push(id);
-          }
-          localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
-          render();
-        }
       });
 
       // Refresh Button Event Listener
