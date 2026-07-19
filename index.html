@@ -492,6 +492,26 @@
       border-color: rgba(255, 126, 0, 0.3);
     }
 
+    .model-select {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.4rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-functional);
+      outline: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: border-color var(--transition-speed);
+    }
+
+    .model-select:hover {
+      border-color: var(--accent-color);
+    }
+
     .action-btn {
       display: inline-flex;
       align-items: center;
@@ -677,7 +697,7 @@
         <p>Facebook Marketplace & TradeMe Motors Aggregator</p>
       </div>
       <div class="header-actions">
-        <button class="btn" id="themeToggleBtn">☀ Premium Light</button>
+        <button class="btn" id="themeToggleBtn">☀ Light Theme</button>
         <button class="btn btn-accent" id="refreshBtn">🔄 Refresh Data</button>
       </div>
     </header>
@@ -877,9 +897,17 @@
       let listings = window.marketplaceListings || [];
       const meta = window.lastRunMeta || {};
       let favorites = JSON.parse(localStorage.getItem('polestar_favorites') || '[]');
+      let modelOverrides = JSON.parse(localStorage.getItem('polestar_model_overrides') || '{}');
       let activeFilter = "all";
       let activeSource = "all";
       let searchQuery = "";
+
+      function getModel(item) {
+        if (modelOverrides[item.id]) {
+          return modelOverrides[item.id];
+        }
+        return classifyModel(item.title);
+      }
 
       // Theme toggle initialization
       let currentTheme = localStorage.getItem("polestar_theme") || "light";
@@ -895,7 +923,7 @@
 
       function updateThemeButtonUI() {
         if (currentTheme === "dark") {
-          themeToggleBtn.innerHTML = "☀ Premium Light";
+          themeToggleBtn.innerHTML = "☀ Light Theme";
         } else {
           themeToggleBtn.innerHTML = "☾ Midnight Dark";
         }
@@ -1033,6 +1061,12 @@
           const sourceBadge = `<span class="tag tag-source ${sourceClass}">${sourceText}</span>`;
           const isFav = favorites.includes(item.id);
 
+          const currentModel = getModel(item);
+          const options = ["Unspecified", "SRSM", "LRSM", "LRDM", "Performance"].map(opt => {
+            return `<option value="${opt}" ${currentModel === opt ? 'selected' : ''}>Model: ${opt}</option>`;
+          }).join("");
+          const modelSelect = `<select class="model-select" data-id="${item.id}">${options}</select>`;
+
           return `
             <tr>
               <td>
@@ -1046,6 +1080,7 @@
                     <div class="listing-meta">
                       <span>Added: ${formatDate(item.scraped_at)}</span>
                       ${sourceBadge}
+                      ${modelSelect}
                       ${newBadge}
                     </div>
                   </div>
@@ -1099,7 +1134,7 @@
         const analyzed = listings.map(item => ({
           ...item,
           numericPrice: parsePrice(item.price),
-          variant: classifyModel(item.title),
+          variant: getModel(item),
           year: parseInt((item.title.match(/\b(202\d)\b/) || [])[0], 10) || null
         }));
 
@@ -1281,6 +1316,23 @@
           activeSource = btn.getAttribute("data-source");
           render();
         });
+      });
+
+      // Model Select Change Event Listener
+      body.addEventListener('change', (e) => {
+        if (e.target.classList.contains('model-select')) {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value;
+          
+          const defaultVal = classifyModel(listings.find(i => i.id === id).title);
+          if (val === defaultVal) {
+            delete modelOverrides[id];
+          } else {
+            modelOverrides[id] = val;
+          }
+          localStorage.setItem('polestar_model_overrides', JSON.stringify(modelOverrides));
+          render();
+        }
       });
 
       // Refresh Button Event Listener
