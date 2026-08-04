@@ -1,7 +1,7 @@
 window.marketplaceListings = [
   {
     "id": "fb_2268481784003126",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=EqhIRZxa1awQ7kNvwE7Y4fA&_nc_oc=AdrbknrfaAbfCJWZrq5PiSLVxxzqJ1lwt0u37eoPgm5XlCdSlyqj9te_t3pfrGyiQEs&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=h55yjUqfhVXpPGa3nPGbAw&_nc_ss=7c289&oh=00_AQGfK5gc35hfdrm1EAkwSEywhzBwspGQW_Nns33y3XRwvw&oe=6A76C650",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=EqhIRZxa1awQ7kNvwE7Y4fA&_nc_oc=AdrbknrfaAbfCJWZrq5PiSLVxxzqJ1lwt0u37eoPgm5XlCdSlyqj9te_t3pfrGyiQEs&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=MdyJ3TA2l5Z0HTs5IP-THw&_nc_ss=7c289&oh=00_AQEHVWIvwqslSUR6nxfXP9GM5qan6Gn819hG4pyP36lv0g&oe=6A776F10",
     "is_new": false,
     "location": "Takanini, New Zealand",
     "price": "NZ$52,900",
@@ -13,7 +13,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_3889270561209349",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/699273697_952319310903250_8793556936068140221_n.jpg?stp=c185.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=z_L8r9Y-0F8Q7kNvwHfOaYl&_nc_oc=AdrSGF4hAfRfDsb_Y4Y9RHMvtITkQzu6QrKGTNvKNY73I4lIUImma5rpA6p00eQom5w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=h55yjUqfhVXpPGa3nPGbAw&_nc_ss=7c289&oh=00_AQHbqIkG5SaKAOwMQ3tzrwn0VpTSViSes2cs0y3VUhGGgQ&oe=6A76E77A",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/699273697_952319310903250_8793556936068140221_n.jpg?stp=c185.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=z_L8r9Y-0F8Q7kNvwHfOaYl&_nc_oc=AdrSGF4hAfRfDsb_Y4Y9RHMvtITkQzu6QrKGTNvKNY73I4lIUImma5rpA6p00eQom5w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=MdyJ3TA2l5Z0HTs5IP-THw&_nc_ss=7c289&oh=00_AQF7GBPTtAy5ruo11oNF1nb4zBD9s7zan6a3HVGRTp-xQw&oe=6A77903A",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$45,000",
@@ -25,7 +25,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1014104971361127",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=U5PmlPYxaeMQ7kNvwEI_kw1&_nc_oc=AdqBnQbdUuIuHUdmrLCbLOC2G3FJT-yocbv9JaN9rX7iG2YtdzX_MPALuKaPTlt2bYo&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=h55yjUqfhVXpPGa3nPGbAw&_nc_ss=7c289&oh=00_AQEheMuY4s8DdbOdh7F956G8dL3y1raoAu2QoqbitaiXBg&oe=6A76D8C9",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=U5PmlPYxaeMQ7kNvwEI_kw1&_nc_oc=AdqBnQbdUuIuHUdmrLCbLOC2G3FJT-yocbv9JaN9rX7iG2YtdzX_MPALuKaPTlt2bYo&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=MdyJ3TA2l5Z0HTs5IP-THw&_nc_ss=7c289&oh=00_AQGMl7E_ZSm3s6iGD_NSykzSCqE5wbKKVEoky6fF_-b6IQ&oe=6A778189",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -37,7 +37,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1351951440402169",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=TpTduvHFGE4Q7kNvwF84lqa&_nc_oc=AdqHuU9B8ZS4aayZFiYA8PceyiyDOu35EpK-XDMyECBbQjFLrMOqpmgU4OMAb8WfauM&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=h55yjUqfhVXpPGa3nPGbAw&_nc_ss=7c289&oh=00_AQFpRcBAZfZIrCkMVzHBJmk4iVzd14xFqRCsg9ENbpR0aQ&oe=6A76EAC7",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=TpTduvHFGE4Q7kNvwF84lqa&_nc_oc=AdqHuU9B8ZS4aayZFiYA8PceyiyDOu35EpK-XDMyECBbQjFLrMOqpmgU4OMAb8WfauM&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=MdyJ3TA2l5Z0HTs5IP-THw&_nc_ss=7c289&oh=00_AQHEj0linFeAKYrIf6AfqzA7iJp6A6XBaMvENkVtSwgcGg&oe=6A779387",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -132,23 +132,11 @@ window.marketplaceListings = [
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6012064603"
   },
   {
-    "id": "tm_6016081505",
-    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2315847465.jpg",
-    "is_new": false,
-    "location": "Hamilton, Waikato",
-    "price": "$45,990",
-    "raw_id": "6016081505",
-    "scraped_at": "2026-07-15T13:35:16.605315",
-    "source": "trademe",
-    "title": "2022 Polestar 2 LRDM Plus 78Kwh/Ev",
-    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6016081505"
-  },
-  {
     "id": "tm_6003532593",
     "image": "https://trademe.tmcdn.co.nz/photoserver/full/2305595223.jpg",
     "is_new": false,
     "location": "Auckland, Auckland",
-    "price": "$42,990",
+    "price": "$39,990",
     "raw_id": "6003532593",
     "scraped_at": "2026-07-15T13:35:16.605315",
     "source": "trademe",
@@ -160,7 +148,7 @@ window.marketplaceListings = [
     "image": "https://trademe.tmcdn.co.nz/photoserver/full/2306945835.jpg",
     "is_new": false,
     "location": "Auckland, Auckland",
-    "price": "$41,850",
+    "price": "$39,500",
     "raw_id": "6003382156",
     "scraped_at": "2026-07-15T13:35:16.605315",
     "source": "trademe",
@@ -264,6 +252,18 @@ window.marketplaceListings = [
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/5988665522"
   },
   {
+    "id": "tm_6066168580",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2321324238.jpg",
+    "is_new": true,
+    "location": "Hamilton, Waikato",
+    "price": "$40,210",
+    "raw_id": "6066168580",
+    "scraped_at": "2026-08-04T21:00:58.011123",
+    "source": "trademe",
+    "title": "2023 Polestar 2 Lrsm",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6066168580"
+  },
+  {
     "id": "tm_6032800753",
     "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2317653223.jpg",
     "is_new": false,
@@ -310,6 +310,18 @@ window.marketplaceListings = [
     "source": "trademe",
     "title": "2022 Polestar 2 Srsm",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6001749495"
+  },
+  {
+    "id": "tm_6016081505",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2315847465.jpg",
+    "is_new": false,
+    "location": "Hamilton, Waikato",
+    "price": "$45,990",
+    "raw_id": "6016081505",
+    "scraped_at": "2026-07-15T13:35:16.605315",
+    "source": "trademe",
+    "title": "2022 Polestar 2 LRDM Plus 78Kwh/Ev",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6016081505"
   },
   {
     "id": "tm_5966124585",
@@ -396,10 +408,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-08-03T21:01:02.079478+00:00",
+  "last_scraped": "2026-08-04T09:00:58.408378+00:00",
   "new_facebook": 0,
-  "new_trademe": 0,
+  "new_trademe": 1,
   "total_facebook": 5,
-  "total_trademe": 28,
-  "last_fetched_by_actions": "2026-08-03T22:08:51.899756+00:00"
+  "total_trademe": 29,
+  "last_fetched_by_actions": "2026-08-04T11:23:00.685416+00:00"
 };
