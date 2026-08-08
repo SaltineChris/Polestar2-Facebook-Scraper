@@ -1,7 +1,7 @@
 window.marketplaceListings = [
   {
     "id": "fb_2268481784003126",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=luhcgWlks8sQ7kNvwHIx1gx&_nc_oc=Adph26wRb_pt9D52ScvAncLxoDEIa6OTf3T92-l6WE2ffQXdELFF-h80BDjKrJgBSVA&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=4lCiL7s6fCV6bA5codVK5A&_nc_ss=7c289&oh=00_AQGJZx1oixyNBSqYavK8y9U40i5WehKxE2y0jXGKhZhrpQ&oe=6A7CB510",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=lR8fBAE0s2wQ7kNvwHjeQco&_nc_oc=Adqei0nYr41N9uceiFWBYWzvq6NKZZQ2QAHricWcj3kuEBAX2wvitY9BfHJEwDngX7w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Vs1rxWfMNWyTKv7Eiy_qTg&_nc_ss=7c289&oh=00_AQGiloPMz5Vv_IKnBtcxUopez9QiHgtFbovNWga519adWg&oe=6A7D5DD0",
     "is_new": false,
     "location": "Takanini, New Zealand",
     "price": "NZ$52,900",
@@ -13,7 +13,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1014104971361127",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=ThoPN3f1bKQQ7kNvwGHxqOU&_nc_oc=AdrEsIPtkeWeugpNn-cbYkfD90DBqORfa1wzrVaX0ro0_Hm1XgkcBY5NfWE-Q65QZfE&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=4lCiL7s6fCV6bA5codVK5A&_nc_ss=7c289&oh=00_AQHYh04ckd0hHh7dBsq2ohz16WbUcV91RmzpMF9myKMyfA&oe=6A7CC789",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=3KDjtJqElIoQ7kNvwHFIDmp&_nc_oc=AdrBkdXwkAFKNFNA6ZQUjQ1bbipLuKQIV45AMhSdpgQpXOYUCZPuqqnMJtbVNX8ojaE&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Vs1rxWfMNWyTKv7Eiy_qTg&_nc_ss=7c289&oh=00_AQESynz3G5D4BH44yfeHWJaDuX-3ghawk5WSWVYUU6K7jw&oe=6A7D7049",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -25,7 +25,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1351951440402169",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=0j8Hj5NZChYQ7kNvwE7C33T&_nc_oc=AdqCZ3koM0CAh0lCbfwFYQ7_eq_vHu1TYuW2zQJAfHYE4V1RchKi439ghYRSuMRGwZw&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=4lCiL7s6fCV6bA5codVK5A&_nc_ss=7c289&oh=00_AQFDNUVpDIuCT_6ptm6sMu6LMM8FecXYm21anKJQCwHVcg&oe=6A7CD987",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=ndBBRzAxBPAQ7kNvwHJFEqT&_nc_oc=AdqRyA-x7VN0VETyn-KvmolHKdrho6OzBXUtd_4W5SeiXfw9IzpT5mxgHLkP3z-Mykg&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Vs1rxWfMNWyTKv7Eiy_qTg&_nc_ss=7c289&oh=00_AQG5bl1-SQjJ8wAhQ4VQM5IQH2GsbjXIrOL09JoLfOG-nA&oe=6A7D8247",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -228,6 +228,18 @@ window.marketplaceListings = [
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/5988665522"
   },
   {
+    "id": "tm_6073711633",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2304757794.jpg",
+    "is_new": true,
+    "location": "Napier, Hawke's Bay",
+    "price": "$39,950",
+    "raw_id": "6073711633",
+    "scraped_at": "2026-08-09T09:00:57.482544",
+    "source": "trademe",
+    "title": "2022 Polestar 2 LRSM + Full Pilot Pack",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6073711633"
+  },
+  {
     "id": "tm_6066168580",
     "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2321324238.jpg",
     "is_new": false,
@@ -408,10 +420,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-08-08T09:00:58.738540+00:00",
+  "last_scraped": "2026-08-08T21:00:57.741363+00:00",
   "new_facebook": 0,
-  "new_trademe": 0,
+  "new_trademe": 1,
   "total_facebook": 5,
-  "total_trademe": 29,
-  "last_fetched_by_actions": "2026-08-08T09:37:16.661833+00:00"
+  "total_trademe": 30,
+  "last_fetched_by_actions": "2026-08-08T21:29:50.121325+00:00"
 };
