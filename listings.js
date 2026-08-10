@@ -1,7 +1,7 @@
 window.marketplaceListings = [
   {
     "id": "fb_2268481784003126",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=lR8fBAE0s2wQ7kNvwHjeQco&_nc_oc=Adqei0nYr41N9uceiFWBYWzvq6NKZZQ2QAHricWcj3kuEBAX2wvitY9BfHJEwDngX7w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Vn_fOkM-Ob51lTOm8zCh9g&_nc_ss=7c289&oh=00_AQEG90IhG32c6FTj_aV5U5DynbeqaUikXa09IQ-r7WTntg&oe=6A7EAF50",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=lR8fBAE0s2wQ7kNvwHjeQco&_nc_oc=Adqei0nYr41N9uceiFWBYWzvq6NKZZQ2QAHricWcj3kuEBAX2wvitY9BfHJEwDngX7w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=i1dLzbe3lI-mlyxeggwsqg&_nc_ss=7c289&oh=00_AQHSP-aTNoK9gxnZUO-PbJHZkknmUfVbSEfaMbh00HuwEQ&oe=6A7F5810",
     "is_new": false,
     "location": "Takanini, New Zealand",
     "price": "NZ$52,900",
@@ -13,7 +13,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1014104971361127",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=3KDjtJqElIoQ7kNvwHFIDmp&_nc_oc=AdrBkdXwkAFKNFNA6ZQUjQ1bbipLuKQIV45AMhSdpgQpXOYUCZPuqqnMJtbVNX8ojaE&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Vn_fOkM-Ob51lTOm8zCh9g&_nc_ss=7c289&oh=00_AQGCNzuPmC3TRGp_mUDY0uFT8zns2aQn8Llgc0m0oNv_-w&oe=6A7EC1C9",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=3KDjtJqElIoQ7kNvwHFIDmp&_nc_oc=AdrBkdXwkAFKNFNA6ZQUjQ1bbipLuKQIV45AMhSdpgQpXOYUCZPuqqnMJtbVNX8ojaE&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=i1dLzbe3lI-mlyxeggwsqg&_nc_ss=7c289&oh=00_AQH-hfE3GyNqxDHXpNhGglOmxGLlsZncjBtpXbNXbY17rg&oe=6A7F6A89",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -25,7 +25,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1351951440402169",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=ndBBRzAxBPAQ7kNvwHJFEqT&_nc_oc=AdqRyA-x7VN0VETyn-KvmolHKdrho6OzBXUtd_4W5SeiXfw9IzpT5mxgHLkP3z-Mykg&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Vn_fOkM-Ob51lTOm8zCh9g&_nc_ss=7c289&oh=00_AQG421RNMAI0sgP6aKU5rI-0dJngXGknnl4OUlYGnOlRJw&oe=6A7ED3C7",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=ndBBRzAxBPAQ7kNvwHJFEqT&_nc_oc=AdqRyA-x7VN0VETyn-KvmolHKdrho6OzBXUtd_4W5SeiXfw9IzpT5mxgHLkP3z-Mykg&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=i1dLzbe3lI-mlyxeggwsqg&_nc_ss=7c289&oh=00_AQF-P7ACZfP0fNk_NYiOBP1WLH2lr3-p4-GOVpVGZ3xTeg&oe=6A7F7C87",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -34,6 +34,18 @@ window.marketplaceListings = [
     "source": "facebook",
     "title": "2023 Polestar 2",
     "url": "https://www.facebook.com/marketplace/item/1351951440402169/"
+  },
+  {
+    "id": "tm_6031480588",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2317524865.jpg",
+    "is_new": false,
+    "location": "Christchurch, Canterbury",
+    "price": "$82,490",
+    "raw_id": "6031480588",
+    "scraped_at": "2026-07-15T13:35:16.604813",
+    "source": "trademe",
+    "title": "2026 Polestar 2 Lrdm Performance EV",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6031480588"
   },
   {
     "id": "tm_6025571614",
@@ -82,18 +94,6 @@ window.marketplaceListings = [
     "source": "trademe",
     "title": "2022 Polestar 2 Srsm Plus",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6063485931"
-  },
-  {
-    "id": "tm_6031480588",
-    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2317524865.jpg",
-    "is_new": false,
-    "location": "Christchurch, Canterbury",
-    "price": "$82,490",
-    "raw_id": "6031480588",
-    "scraped_at": "2026-07-15T13:35:16.604813",
-    "source": "trademe",
-    "title": "2026 Polestar 2 Lrdm Performance EV",
-    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6031480588"
   },
   {
     "id": "tm_6047660029",
@@ -216,18 +216,6 @@ window.marketplaceListings = [
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6023587741"
   },
   {
-    "id": "tm_6012566943",
-    "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2315420787.jpg",
-    "is_new": false,
-    "location": "Auckland City, Auckland",
-    "price": "$32,500",
-    "raw_id": "6012566943",
-    "scraped_at": "2026-07-15T13:35:16.605817",
-    "source": "trademe",
-    "title": "2022 Polestar 2 SRSM",
-    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6012566943"
-  },
-  {
     "id": "tm_5988665522",
     "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2312767250.jpg",
     "is_new": false,
@@ -298,6 +286,18 @@ window.marketplaceListings = [
     "source": "trademe",
     "title": "2022 Polestar 2 Srsm",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6003291653"
+  },
+  {
+    "id": "tm_6012566943",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/480x360c/2315420787.jpg",
+    "is_new": false,
+    "location": "Auckland City, Auckland",
+    "price": "$32,500",
+    "raw_id": "6012566943",
+    "scraped_at": "2026-07-15T13:35:16.605817",
+    "source": "trademe",
+    "title": "2022 Polestar 2 SRSM",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6012566943"
   },
   {
     "id": "tm_6001749495",
@@ -432,10 +432,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-08-09T21:00:58.825851+00:00",
+  "last_scraped": "2026-08-10T09:00:54.597601+00:00",
   "new_facebook": 0,
   "new_trademe": 0,
   "total_facebook": 5,
   "total_trademe": 31,
-  "last_fetched_by_actions": "2026-08-09T21:31:52.061777+00:00"
+  "last_fetched_by_actions": "2026-08-10T10:16:19.446454+00:00"
 };
