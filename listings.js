@@ -146,7 +146,7 @@ window.marketplaceListings = [
   {
     "id": "tm_6088240791",
     "image": "https://trademe.tmcdn.co.nz/photoserver/full/2324008847.jpg",
-    "is_new": true,
+    "is_new": false,
     "location": "Auckland, Auckland",
     "price": "$35,880",
     "raw_id": "6088240791",
@@ -564,10 +564,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-08-17T21:01:17.624179+00:00",
+  "last_scraped": "2026-08-18T09:02:02.869227+00:00",
   "new_facebook": 0,
-  "new_trademe": 1,
+  "new_trademe": 0,
   "total_facebook": 6,
   "total_trademe": 41,
-  "last_fetched_by_actions": "2026-08-17T21:25:53.404412+00:00"
+  "last_fetched_by_actions": "2026-08-18T09:32:59.574774+00:00"
 };
