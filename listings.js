@@ -1,7 +1,7 @@
 window.marketplaceListings = [
   {
     "id": "fb_2268481784003126",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=7ZoqeF7Tb9MQ7kNvwHojYED&_nc_oc=AdrNAspu7UMvNLySx3ap24TnwK_wR0P8iBliUEpy09AVAEuXlxkMe4OXAf7psa2snd0&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Cx5p6nKp0b_E9sFY6I7oPA&_nc_ss=7c289&oh=00_AQGagJIIK_OlSsvgedwd9ulNV6pW3Sq0FR5SUyAsmEwsGg&oe=6A8D2FD0",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=7ZoqeF7Tb9MQ7kNvwHojYED&_nc_oc=AdrNAspu7UMvNLySx3ap24TnwK_wR0P8iBliUEpy09AVAEuXlxkMe4OXAf7psa2snd0&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UFh_299WR5aZDRZN_oNdWg&_nc_ss=7c289&oh=00_AQF9Xhv3X5ULhNqr57hGjsFsMD8yNcAww3oZZkvsGUQEFA&oe=6A8DD890",
     "is_new": false,
     "location": "Takanini, New Zealand",
     "price": "NZ$52,900",
@@ -13,7 +13,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1014104971361127",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=zoehS5IXpdMQ7kNvwEPp8Jm&_nc_oc=AdrjOAdS3kxDq6PW--CbdadrNYmPdxLJVO_Vtw6qV4EirlGi88Xj4kCMIubSfMJ1mFc&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Cx5p6nKp0b_E9sFY6I7oPA&_nc_ss=7c289&oh=00_AQEMbvIyXWyYPl-3pyZTGWR5SNAqLpaNKvdxo8VruduEjA&oe=6A8D4249",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=zoehS5IXpdMQ7kNvwEPp8Jm&_nc_oc=AdrjOAdS3kxDq6PW--CbdadrNYmPdxLJVO_Vtw6qV4EirlGi88Xj4kCMIubSfMJ1mFc&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UFh_299WR5aZDRZN_oNdWg&_nc_ss=7c289&oh=00_AQHI6E056MUZHdMBKwX5PPttAWgh5zPClPzkdTbHYy6jIQ&oe=6A8DEB09",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -25,7 +25,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1351951440402169",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=X1eJbujo1KAQ7kNvwGaaqk7&_nc_oc=AdrdAGh7xF5SVlftTlrNIcmGq-y69JWH8QqM4fLvaxxdfgGe4Q5MskL2jTPM2jDTFWo&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Cx5p6nKp0b_E9sFY6I7oPA&_nc_ss=7c289&oh=00_AQEwEwVPnOKIc0PIF1v0DDMnDVeTNmVLsd8ox8RQoc9yAg&oe=6A8D5447",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=X1eJbujo1KAQ7kNvwGaaqk7&_nc_oc=AdrdAGh7xF5SVlftTlrNIcmGq-y69JWH8QqM4fLvaxxdfgGe4Q5MskL2jTPM2jDTFWo&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UFh_299WR5aZDRZN_oNdWg&_nc_ss=7c289&oh=00_AQGx7qIoq0yWNyERTL93DdRFK9rX73EjmoRWfvt91mdGYw&oe=6A8DFD07",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -37,7 +37,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1586403373069968",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/762816645_1577584160370584_3409155136643183846_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=106&ccb=1-7&_nc_sid=92e707&_nc_ohc=wLu359BAMLgQ7kNvwHHh3sE&_nc_oc=AdoSg5tmN-FiBRkKmLthS4nquMC34uE19T5UXPOBfjNW0RzYPclbjVwOK7XBrEv6Fig&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=8gn5mM-6bMTl0i4IN-U_DA&_nc_ss=7e289&oh=00_AQHreFsfu4aMZzu0Rt8gm6O50rVVQKprX8CmHLibf17enw&oe=6A8D2E21",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/762816645_1577584160370584_3409155136643183846_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=106&ccb=1-7&_nc_sid=92e707&_nc_ohc=wLu359BAMLgQ7kNvwHHh3sE&_nc_oc=AdoSg5tmN-FiBRkKmLthS4nquMC34uE19T5UXPOBfjNW0RzYPclbjVwOK7XBrEv6Fig&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=6-xit_75hO0JrNgLdJ9LZQ&_nc_ss=7e289&oh=00_AQHdzaeSaJOuGmtjT009GFnMIDVLAiJ2dBpbZyk27rb0GA&oe=6A8DD6E1",
     "is_new": false,
     "location": "Rangiora, New Zealand",
     "price": "NZ$50,999",
@@ -46,6 +46,18 @@ window.marketplaceListings = [
     "source": "facebook",
     "title": "Polestar",
     "url": "https://www.facebook.com/marketplace/item/1586403373069968/"
+  },
+  {
+    "id": "tm_6071105855",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2321913425.jpg",
+    "is_new": false,
+    "location": "Auckland, Auckland",
+    "price": "$45,990",
+    "raw_id": "6071105855",
+    "scraped_at": "2026-08-11T21:00:56.071946",
+    "source": "trademe",
+    "title": "2022 Polestar 2 SRSM Plus 69Kwh 470 WLTP EV RANGE",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6071105855"
   },
   {
     "id": "tm_6025557216",
@@ -82,18 +94,6 @@ window.marketplaceListings = [
     "source": "trademe",
     "title": "2026 Polestar 2 Lrdm Performance EV",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6031480588"
-  },
-  {
-    "id": "tm_6071105855",
-    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2321913425.jpg",
-    "is_new": false,
-    "location": "Auckland, Auckland",
-    "price": "$45,990",
-    "raw_id": "6071105855",
-    "scraped_at": "2026-08-11T21:00:56.071946",
-    "source": "trademe",
-    "title": "2022 Polestar 2 SRSM Plus 69Kwh 470 WLTP EV RANGE",
-    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6071105855"
   },
   {
     "id": "tm_6063485931",
@@ -576,10 +576,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-08-20T21:01:01.985699+00:00",
+  "last_scraped": "2026-08-21T09:00:56.321410+00:00",
   "new_facebook": 0,
   "new_trademe": 0,
   "total_facebook": 6,
   "total_trademe": 42,
-  "last_fetched_by_actions": "2026-08-20T21:27:30.451299+00:00"
+  "last_fetched_by_actions": "2026-08-21T09:35:57.707423+00:00"
 };
