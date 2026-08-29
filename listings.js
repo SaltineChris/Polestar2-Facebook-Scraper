@@ -1,7 +1,7 @@
 window.marketplaceListings = [
   {
     "id": "fb_1060471796768878",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/787160286_27935234449468447_321485044151711251_n.jpg?stp=c0.43.261.261a_dst-jpg_p261x260_tt6&_nc_cat=105&ccb=1-7&_nc_sid=92e707&_nc_ohc=h0I5HJpTozsQ7kNvwE3GK8O&_nc_oc=AdqBlJzAqpkzNShC6-A994el1D4csmKAi4V0Bjjzk6K2EhRMrCK3X-j9Y93bpW8dqEo&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UgUhIz7JOPPlauwK2aD3yQ&_nc_ss=7c289&oh=00_AQFGpNsQcckgu0Hq8OjEeEYgntxPhessPdaqj23pRMZ9LA&oe=6A971C64",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/787160286_27935234449468447_321485044151711251_n.jpg?stp=c0.43.261.261a_dst-jpg_p261x260_tt6&_nc_cat=105&ccb=1-7&_nc_sid=92e707&_nc_ohc=h0I5HJpTozsQ7kNvwE3GK8O&_nc_oc=AdqBlJzAqpkzNShC6-A994el1D4csmKAi4V0Bjjzk6K2EhRMrCK3X-j9Y93bpW8dqEo&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=bXB1VQ9ym7iWq5MrHipTMA&_nc_ss=7c289&oh=00_AQHX9tR2H0ObJzwV5TiPAYOgLruL3o8bi6RwVz54cxDbgA&oe=6A97C524",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$33,500",
@@ -13,7 +13,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_2268481784003126",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=jBkjC8pRYdoQ7kNvwGbI4A0&_nc_oc=AdrIhs2cEb8rXFai3Dp1oxUCBzESLLg_nsvNvYmEHyPFO-wPA91rcQF8KZ0QwXWGovE&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UgUhIz7JOPPlauwK2aD3yQ&_nc_ss=7c289&oh=00_AQGQ7C5V6kI7zZuq7OAzifZ-yyWFMHhc6Sq57n6xB3grIQ&oe=6A971310",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&ccb=1-7&_nc_sid=92e707&_nc_ohc=jBkjC8pRYdoQ7kNvwGbI4A0&_nc_oc=AdrIhs2cEb8rXFai3Dp1oxUCBzESLLg_nsvNvYmEHyPFO-wPA91rcQF8KZ0QwXWGovE&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=bXB1VQ9ym7iWq5MrHipTMA&_nc_ss=7c289&oh=00_AQEH5jVcjU2tjEMueWZTvGx4QBt65eiJwgMUKSjMr2cV6g&oe=6A97BBD0",
     "is_new": false,
     "location": "Takanini, New Zealand",
     "price": "NZ$52,900",
@@ -25,7 +25,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1351951440402169",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=uqG9XygSI3gQ7kNvwFKMHaC&_nc_oc=AdpXT7vecL9PAHjGlj7Vkg60tfq32KUK-mPrNtp_m6QN4ouYxrTzM1Y7vcMXNPEhT9w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UgUhIz7JOPPlauwK2aD3yQ&_nc_ss=7c289&oh=00_AQHUNsh1dNi8KvFZmn46CWohKdFJg6FJLASp67PVmDZBXg&oe=6A973787",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&ccb=1-7&_nc_sid=92e707&_nc_ohc=uqG9XygSI3gQ7kNvwFKMHaC&_nc_oc=AdpXT7vecL9PAHjGlj7Vkg60tfq32KUK-mPrNtp_m6QN4ouYxrTzM1Y7vcMXNPEhT9w&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=bXB1VQ9ym7iWq5MrHipTMA&_nc_ss=7c289&oh=00_AQEQ6VtQt4dw78RdchyphaWaGl1sVqjR1qAtzBZeUvRDug&oe=6A97E047",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -37,7 +37,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1014104971361127",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=MDHX2b3uYDkQ7kNvwGadouG&_nc_oc=AdpTYDLX4jHnBbbAA68j7sky7wt91elMIFmryCEYJhbulB26wsOG43GlV3d9B9Q55-g&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UgUhIz7JOPPlauwK2aD3yQ&_nc_ss=7c289&oh=00_AQGTvJruiH7qt1SWqo2OpT9-nf7zg9bELUp8TDOygGYICw&oe=6A972589",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&ccb=1-7&_nc_sid=92e707&_nc_ohc=MDHX2b3uYDkQ7kNvwGadouG&_nc_oc=AdpTYDLX4jHnBbbAA68j7sky7wt91elMIFmryCEYJhbulB26wsOG43GlV3d9B9Q55-g&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=bXB1VQ9ym7iWq5MrHipTMA&_nc_ss=7c289&oh=00_AQHVXT0GplZoLCGp4RVxeAiDmzNAVKUMK-j6fOzP9ZC5CQ&oe=6A97CE49",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -49,7 +49,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1586403373069968",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/762816645_1577584160370584_3409155136643183846_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=106&ccb=1-7&_nc_sid=92e707&_nc_ohc=JBkmpl55soQQ7kNvwFttjaf&_nc_oc=AdoVTLJTqjEaR3WCOXzdYjgH1HjMngYwtCIALJmfb_l4RvQnSptXmZ0yRO_dk-Pnwk8&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=dWpqGQah6gre9vps6I_Rjg&_nc_ss=7e289&oh=00_AQFyYGtP_h-QmZYzicjjuSYzQZHJbUgmRhDDr5fb1aJEOA&oe=6A971161",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/762816645_1577584160370584_3409155136643183846_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=106&ccb=1-7&_nc_sid=92e707&_nc_ohc=JBkmpl55soQQ7kNvwFttjaf&_nc_oc=AdoVTLJTqjEaR3WCOXzdYjgH1HjMngYwtCIALJmfb_l4RvQnSptXmZ0yRO_dk-Pnwk8&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=CmSo7FhLD_fVCFGL_6d3qw&_nc_ss=7e289&oh=00_AQEYWVV4pwbHIaeJcDg8QDAJYcfqc0yNkTJkqOFxDRdxjA&oe=6A97BA21",
     "is_new": false,
     "location": "Rangiora, New Zealand",
     "price": "NZ$50,999",
@@ -660,10 +660,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-08-28T09:00:52.442035+00:00",
+  "last_scraped": "2026-08-28T21:00:51.888475+00:00",
   "new_facebook": 0,
   "new_trademe": 0,
   "total_facebook": 7,
   "total_trademe": 48,
-  "last_fetched_by_actions": "2026-08-28T20:43:12.498207+00:00"
+  "last_fetched_by_actions": "2026-08-29T03:05:08.029483+00:00"
 };
