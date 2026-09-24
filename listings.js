@@ -1,7 +1,7 @@
 window.marketplaceListings = [
   {
     "id": "fb_2268481784003126",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=MrVqXwa_T84Q7kNvwH9dDeW&_nc_oc=AdpHNSQ5usRRb9eRLt2d2z3vQMaOfKtkdVuD4AMJTbnPwa1rbBNRrh8dgfy6TYdpIPI&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=5_t_q6ozh-BTaAufSv6BeQ&_nc_ss=7e289&oh=00_AQLtgOIwdq-zEIHi18Ah_x9czBOyQL9q3a7qFT4877fYdw&oe=6AB99250",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/748216550_27833777379589900_2875588483873443291_n.jpg?stp=c0.0.261.261a_dst-jpg_p261x260_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=MrVqXwa_T84Q7kNvwH9dDeW&_nc_oc=AdpHNSQ5usRRb9eRLt2d2z3vQMaOfKtkdVuD4AMJTbnPwa1rbBNRrh8dgfy6TYdpIPI&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Bz6qgRoN1gXLVe9E1Mkcrw&_nc_ss=79289&oh=00_AQKSJY4AOazy-A6OIS7rvWq99PXSYPLeH3wKTPzXk_GNVA&oe=6ABAE3D0",
     "is_new": false,
     "location": "Takanini, New Zealand",
     "price": "NZ$52,900",
@@ -13,7 +13,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1351951440402169",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=Ps4nH17QW8wQ7kNvwEUobHb&_nc_oc=AdpOc6g-jr4jvJyeRKz1aMWA7NNK0Dg3RynZbSVRVeQ762DpzzexPm9Olu7yOTgnH08&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=5_t_q6ozh-BTaAufSv6BeQ&_nc_ss=7e289&oh=00_AQKvpZhSQjXJcjLC5Q47PdWasJ8NuHrfi1X-uKrWse4WYg&oe=6AB97E87",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/734685206_2572630739819218_3730087950208369250_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=Ps4nH17QW8wQ7kNvwEUobHb&_nc_oc=AdpOc6g-jr4jvJyeRKz1aMWA7NNK0Dg3RynZbSVRVeQ762DpzzexPm9Olu7yOTgnH08&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Bz6qgRoN1gXLVe9E1Mkcrw&_nc_ss=79289&oh=00_AQKNN3C-LTARd4Z64OCUusUvLCT7ARGS6iieRZwEzks27g&oe=6ABAD007",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -25,7 +25,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1014104971361127",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=RuxrLyELpH4Q7kNvwHtMgrr&_nc_oc=Adqrx8KZ8WTk-DO_Njt4oeDO-VLeDJQMf-iUi2NDRPxJuqnq5qc3UVwSZcQ2iqxYnHI&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=5_t_q6ozh-BTaAufSv6BeQ&_nc_ss=7e289&oh=00_AQKEGsY5d9a_wlYoYLttRZby_R8MibTCel3iQRTTrmGXvw&oe=6AB9A4C9",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/744662072_1722262995764997_3396454697105634961_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=RuxrLyELpH4Q7kNvwHtMgrr&_nc_oc=Adqrx8KZ8WTk-DO_Njt4oeDO-VLeDJQMf-iUi2NDRPxJuqnq5qc3UVwSZcQ2iqxYnHI&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Bz6qgRoN1gXLVe9E1Mkcrw&_nc_ss=79289&oh=00_AQIqJ5SDLfQOUIB1zuea_GgaH2-ted38Wc-FyHfz83ML8Q&oe=6ABAF649",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$42,995",
@@ -37,7 +37,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1807516790424451",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/796968018_2336158440461318_2937256663782095819_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=ZtmTZ90qntkQ7kNvwHBd5CI&_nc_oc=AdolDcVgV7Lken0oJ0ah-TDeeE-wo5i2_lti8P-49pO6SUlf2Y24iiTWoM-qyp0iYOs&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=5_t_q6ozh-BTaAufSv6BeQ&_nc_ss=7e289&oh=00_AQJetCRl1H93FM9xI31A9Rq1VbJyHtkxaW31UzrA3g22ew&oe=6AB981BD",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/796968018_2336158440461318_2937256663782095819_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=SLT9-m3cB_4Q7kNvwEpzquZ&_nc_oc=Adp115mYaYXdv3KSy9GNfYa5oY6W7lrqafsZomobwBstq57i172ZiBpYprxeg0KiyTU&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=Bz6qgRoN1gXLVe9E1Mkcrw&_nc_ss=79289&oh=00_AQKHwP0QizbR9V2ZwUhLO9xS8gj5xYJgTkWMGJdqdp8d8g&oe=6ABAD33D",
     "is_new": false,
     "location": "Auckland, New Zealand",
     "price": "NZ$32,480",
@@ -49,7 +49,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1586403373069968",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/762816645_1577584160370584_3409155136643183846_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=sm46zZQ4ZfMQ7kNvwGrspo8&_nc_oc=AdrM3Lk1zEDOe1jS6-VsuCle_sgtLKeKsV_mDvxNklqwBemKLZZ-s3wQr4S4mPDyvbg&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UaFpEfRiLGeDmwRJZrJlzQ&_nc_ss=7e289&oh=00_AQKeSis0XAs2elJmWkvJsg3CbTcco7P2wKry5FthVA0N9Q&oe=6AB990A1",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/762816645_1577584160370584_3409155136643183846_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=sXG1O1FkvRAQ7kNvwGVe42z&_nc_oc=AdqX_NkN2d1SVafPd5NbFHOl14o0xQROWTvHnYnKYXsqK71wgTXIMqARbXZTdIwbr2E&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=vN0oVBQZiwX0eQsIoLngfA&_nc_ss=7e289&oh=00_AQLw_OKLZvMBmmJpYYv8CS5fRAZvDpNe0In8JgtySqOquA&oe=6ABAE221",
     "is_new": false,
     "location": "Rangiora, New Zealand",
     "price": "NZ$50,999",
@@ -61,7 +61,7 @@ window.marketplaceListings = [
   },
   {
     "id": "fb_1590554779184716",
-    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/779786980_1826473845471646_8227007519269733580_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=hlaDGplYHOoQ7kNvwFhN7FA&_nc_oc=Adr4CX9qc2Mze6EUXXs74fnKrGrazqOM241ebuoadcZ6Prea8nW4AZuKKS13nlVCz44&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=UaFpEfRiLGeDmwRJZrJlzQ&_nc_ss=7e289&oh=00_AQK1nGpynLcYYAvIN5cgNj5HWWwYhqq3mJcWBA37ywK-1w&oe=6AB99513",
+    "image": "https://scontent.fakl2-1.fna.fbcdn.net/v/t39.84726-6/779786980_1826473845471646_8227007519269733580_n.jpg?stp=c43.0.260.260a_dst-jpg_p261x260_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=92e707&_nc_ohc=hlaDGplYHOoQ7kNvwFhN7FA&_nc_oc=Adr4CX9qc2Mze6EUXXs74fnKrGrazqOM241ebuoadcZ6Prea8nW4AZuKKS13nlVCz44&_nc_zt=14&_nc_ht=scontent.fakl2-1.fna&_nc_gid=vN0oVBQZiwX0eQsIoLngfA&_nc_ss=7e289&oh=00_AQIJqiPWNxeONjONQCziPigSC_f1G-Q_iavl4gnp1fGyzg&oe=6ABAE693",
     "is_new": false,
     "location": "Nelson, New Zealand",
     "price": "NZ$31,500",
@@ -92,8 +92,32 @@ window.marketplaceListings = [
     "raw_id": "6031480588",
     "scraped_at": "2026-07-15T13:35:16.604813",
     "source": "trademe",
-    "title": "2026 Polestar 2 Lrdm Performance EV",
+    "title": "2026 Polestar 2 LRDM Performance EV",
     "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6031480588"
+  },
+  {
+    "id": "tm_6031480581",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2317524951.jpg",
+    "is_new": true,
+    "location": "Christchurch, Canterbury",
+    "price": "$69,990",
+    "raw_id": "6031480581",
+    "scraped_at": "2026-09-24T12:15:36.152350",
+    "source": "trademe",
+    "title": "2025 Polestar 2 LRDM Plus 78Kwh AWD",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6031480581"
+  },
+  {
+    "id": "tm_6138094421",
+    "image": "https://trademe.tmcdn.co.nz/photoserver/full/2329793084.jpg",
+    "is_new": true,
+    "location": "Christchurch, Canterbury",
+    "price": "$44,990",
+    "raw_id": "6138094421",
+    "scraped_at": "2026-09-24T12:15:36.152413",
+    "source": "trademe",
+    "title": "2022 Polestar 2 LRSM Automatic EV",
+    "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2/listing/6138094421"
   },
   {
     "id": "tm_6115801952",
@@ -936,10 +960,10 @@ window.marketplaceListings = [
   }
 ];
 window.lastRunMeta = {
-  "last_scraped": "2026-09-23T12:13:19.968489+00:00",
+  "last_scraped": "2026-09-24T12:15:36.244966+00:00",
   "new_facebook": 0,
-  "new_trademe": 0,
+  "new_trademe": 2,
   "total_facebook": 9,
-  "total_trademe": 69,
-  "last_fetched_by_actions": "2026-09-23T23:24:23.307652+00:00"
+  "total_trademe": 71,
+  "last_fetched_by_actions": "2026-09-24T23:43:13.233066+00:00"
 };
