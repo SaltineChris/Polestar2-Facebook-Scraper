@@ -101,6 +101,35 @@ body {
   flex-direction: column;
 }
 
+/* Crafted Browser Surfaces: Selection, Scrollbars, Focus Rings */
+::selection {
+  background-color: var(--accent-gold-bg);
+  color: var(--accent-gold);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-xs);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-active);
+}
+
 /* App Container with Safe Area Inset Support (Notches & Dynamic Island) */
 .app-layout {
   max-width: 1360px;
