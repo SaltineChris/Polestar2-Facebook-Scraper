@@ -459,8 +459,27 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = `
         <div class="empty-state">
           <p>No Polestar 2 vehicles found matching current criteria.</p>
+          <button class="pill" id="resetFiltersBtn" style="margin-top: 0.75rem; display: inline-flex;">Reset all filters</button>
         </div>
       `;
+      const resetBtn = document.getElementById("resetFiltersBtn");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          searchInput.value = "";
+          searchQuery = "";
+          timeFilterBtns.forEach(b => b.classList.remove("active"));
+          const allPill = document.querySelector('#timeFilters .pill[data-filter="all"]');
+          if (allPill) allPill.classList.add("active");
+          activeFilter = "all";
+
+          sourceFilterBtns.forEach(b => b.classList.remove("active"));
+          const allSourcePill = document.querySelector('#sourceFilters .pill[data-source="all"]');
+          if (allSourcePill) allSourcePill.classList.add("active");
+          activeSource = "all";
+
+          renderListings();
+        });
+      }
       return;
     }
 
