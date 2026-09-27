@@ -542,6 +542,11 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
+      // Distill title by stripping redundant repeated phrase "Polestar 2" or "202x Polestar 2" since it's already on the tracker
+      let displayTitle = safeTitle;
+      displayTitle = displayTitle.replace(/^(\d{4}\s+)?polestar\s+2\s*/i, '').trim();
+      if (!displayTitle) displayTitle = safeTitle;
+
       return `
         <article class="vehicle-row" data-id="${safeId}">
           <!-- Thumbnail -->
@@ -554,7 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="v-main">
             <div class="v-title-row">
               <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="v-title" title="${safeTitle}">
-                ${safeTitle}
+                ${item._year ? `<span class="v-year-tag">${item._year}</span> ` : ''}${displayTitle}
               </a>
               <span class="tag-badge ${sourceClass}">${sourceLabel}</span>
               <select class="trim-select" data-id="${safeId}" aria-label="Trim Variant">

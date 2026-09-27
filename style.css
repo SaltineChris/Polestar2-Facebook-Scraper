@@ -537,6 +537,13 @@ body {
   word-break: break-word;
 }
 
+.v-year-tag {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.15rem;
+}
+
 .v-title:hover {
   color: var(--accent-gold);
 }
