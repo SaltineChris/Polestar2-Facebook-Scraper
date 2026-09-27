@@ -101,12 +101,12 @@ body {
   flex-direction: column;
 }
 
-/* App Container */
+/* App Container with Safe Area Inset Support (Notches & Dynamic Island) */
 .app-layout {
   max-width: 1360px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.25rem 1.5rem 3rem 1.5rem;
+  padding: max(1.25rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(3rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
 }
 
 /* ==========================================================================
@@ -923,6 +923,43 @@ body {
 
   .inspect-image-wrap {
     height: 190px;
+  }
+}
+
+/* ==========================================================================
+   Adaptation: Pointer & Touch Ergonomics (Thumbs & Touch Targets >= 44px)
+   ========================================================================== */
+@media (pointer: coarse) {
+  .pill {
+    padding: 0.5rem 0.85rem;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .fav-star-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .view-link-btn {
+    min-height: 42px;
+    padding: 0.5rem 0.95rem;
+  }
+
+  .trim-select {
+    min-height: 36px;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .search-wrap input {
+    min-height: 44px;
+    font-size: 16px; /* Prevents auto-zoom on iOS Safari */
+  }
+
+  .icon-btn {
+    width: 42px;
+    height: 42px;
   }
 }
 
