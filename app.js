@@ -57,11 +57,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let activeInspectedId = null;
 
+  // Safe localStorage helper to protect against corrupted state or private browsing errors
+  function safeGetStorage(key, fallback) {
+    try {
+      const val = localStorage.getItem(key);
+      return val ? JSON.parse(val) : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function safeSetStorage(key, val) {
+    try {
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch (e) {
+      console.warn("localStorage quota exceeded or blocked:", e);
+    }
+  }
+
   // State
-  let rawListings = window.marketplaceListings || [];
+  let rawListings = Array.isArray(window.marketplaceListings) ? window.marketplaceListings : [];
   const meta = window.lastRunMeta || {};
-  let favorites = JSON.parse(localStorage.getItem('polestar_favorites') || '[]');
-  let modelOverrides = JSON.parse(localStorage.getItem('polestar_model_overrides') || '{}');
+  let favorites = safeGetStorage('polestar_favorites', []);
+  let modelOverrides = safeGetStorage('polestar_model_overrides', {});
   let activeFilter = "all";
   let activeSource = "all";
   let searchQuery = "";
@@ -312,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       favorites.push(activeInspectedId);
     }
-    localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
+    safeSetStorage('polestar_favorites', favorites);
     updateInspectFavUI(favorites.includes(activeInspectedId));
     renderListings();
   });
@@ -334,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         favorites.push(id);
       }
-      localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
+      safeSetStorage('polestar_favorites', favorites);
       renderListings();
       return;
     }
@@ -369,7 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         modelOverrides[id] = val;
       }
-      localStorage.setItem('polestar_model_overrides', JSON.stringify(modelOverrides));
+      safeSetStorage('polestar_model_overrides', modelOverrides);
       renderListings();
     }
   });
