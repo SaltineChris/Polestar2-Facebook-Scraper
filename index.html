@@ -1,1349 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Polestar 2 NZ Listings Tracker | CCS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Polestar 2 NZ — Vehicle Tracker</title>
   
-  <!-- Premium Brand Fonts -->
+  <!-- Scandinavian Clean Sans Face -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap" rel="stylesheet">
   
-  <style>
-    /* Design System Custom Properties - CCS Option 1 Brand (Light) & Dark Theme */
-    :root {
-      --bg-main: #F5EEDC; /* Warm Parchment */
-      --bg-card: #FFFFFF;
-      --border-color: rgba(34, 61, 51, 0.15); /* Muted Mulberry Green */
-      --accent-color: #B8860B; /* Burnished Gold */
-      --accent-bg: #223D33; /* Mulberry Green */
-      --text-main: #36454F; /* Charcoal Grey */
-      --text-muted: #62727d;
-      --text-on-accent: #FFFFFF;
-      --font-display: 'Lora', serif;
-      --font-functional: 'Roboto', sans-serif;
-      --card-shadow: 0 8px 30px rgba(34, 61, 51, 0.06);
-      --new-badge-bg: rgba(184, 134, 11, 0.15);
-      --new-badge-text: #B8860B;
-      --tag-border: rgba(184, 134, 11, 0.3);
-      --transition-speed: 0.3s;
-    }
-
-    [data-theme="dark"] {
-      --bg-main: #000000; /* Midnight Black */
-      --bg-card: #121212;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --accent-color: #B8860B; /* Burnished Gold */
-      --accent-bg: #1c322a; /* Darker Mulberry Green */
-      --text-main: #E5E7EB; /* Off-White */
-      --text-muted: #9CA3AF;
-      --text-on-accent: #FFFFFF;
-      --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      --new-badge-bg: rgba(184, 134, 11, 0.25);
-      --new-badge-text: #FBBF24;
-      --tag-border: rgba(255, 255, 255, 0.15);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: var(--font-functional);
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      line-height: 1.6;
-      min-height: 100vh;
-      padding: 2rem 1.5rem;
-      transition: background-color var(--transition-speed), color var(--transition-speed);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Header styling */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2.5rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1.5rem;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand h1 {
-      font-family: var(--font-display);
-      font-size: 2.25rem;
-      font-weight: 700;
-      color: var(--accent-bg);
-      letter-spacing: -0.01em;
-      transition: color var(--transition-speed);
-    }
-
-    [data-theme="dark"] .brand h1 {
-      color: #FFFFFF;
-    }
-
-    .brand p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-top: 0.25rem;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    /* Buttons & Controls */
-    .btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: var(--font-functional);
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn:hover {
-      border-color: var(--accent-color);
-      color: var(--accent-color);
-      transform: translateY(-1px);
-    }
-
-    .btn-accent {
-      background: var(--accent-bg);
-      color: var(--text-on-accent);
-      border: 1px solid transparent;
-    }
-
-    .btn-accent:hover {
-      background: var(--accent-color);
-      color: #FFFFFF;
-    }
-
-    /* Tabs Layout */
-    .tabs-nav {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 0.5rem;
-    }
-
-    .tab-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 600;
-      padding: 0.5rem 1.25rem;
-      cursor: pointer;
-      position: relative;
-      transition: color 0.2s ease;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-main);
-    }
-
-    .tab-btn.active {
-      color: var(--accent-color);
-    }
-
-    .tab-btn.active::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background-color: var(--accent-color);
-      border-radius: 2px;
-    }
-
-    .tab-view {
-      display: none;
-    }
-
-    .tab-view.active {
-      display: block;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Stats Overview Cards */
-    .stats-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--card-shadow);
-      transition: transform 0.2s ease, border-color var(--transition-speed);
-      border-left: 4px solid var(--accent-bg);
-    }
-
-    .stat-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent-color);
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 500;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-top: 0.5rem;
-      line-height: 1.1;
-      font-family: var(--font-display);
-    }
-
-    .stat-sublabel {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 0.4rem;
-      letter-spacing: 0.03em;
-    }
-
-    /* Search and Filters Controls */
-    .controls-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      box-shadow: var(--card-shadow);
-    }
-
-    .search-box {
-      position: relative;
-      flex: 1;
-    }
-
-    .search-box input {
-      width: 100%;
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 0.75rem 1rem 0.75rem 2.75rem;
-      color: var(--text-main);
-      font-family: var(--font-functional);
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-    }
-
-    .search-box input:focus {
-      outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15);
-    }
-
-    .search-box::after {
-      content: "🔍";
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1rem;
-      opacity: 0.6;
-    }
-
-    .filter-group-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      border-top: 1px solid var(--border-color);
-      padding-top: 1.25rem;
-    }
-
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .filter-group-label {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .filters {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .filter-btn {
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: var(--font-functional);
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--accent-bg);
-      color: var(--text-on-accent);
-      border-color: var(--accent-bg);
-      font-weight: 600;
-    }
-
-    /* Table & Container design */
-    .table-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 3rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th {
-      background: rgba(34, 61, 51, 0.04);
-      padding: 1.25rem 1.5rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    [data-theme="dark"] th {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    td {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      vertical-align: middle;
-      color: var(--text-main);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr {
-      transition: background-color 0.2s ease;
-    }
-
-    tr:hover {
-      background-color: rgba(34, 61, 51, 0.02);
-    }
-
-    [data-theme="dark"] tr:hover {
-      background-color: rgba(255, 255, 255, 0.02);
-    }
-
-    /* Listing components inside table */
-    .listing-thumbnail {
-      width: 90px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid var(--border-color);
-      background: var(--bg-main);
-    }
-
-    .thumbnail-fallback {
-      width: 90px;
-      height: 60px;
-      border-radius: 8px;
-      background: var(--bg-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--border-color);
-      font-size: 1.5rem;
-      color: var(--accent-color);
-    }
-
-    .listing-info {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .listing-details {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .listing-title {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--text-main);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .listing-title:hover {
-      color: var(--accent-color);
-      text-decoration: underline;
-    }
-
-    .listing-meta {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 0.35rem;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .listing-price {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent-color);
-      font-family: var(--font-display);
-    }
-
-    /* Badges & Tags */
-    .tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.15rem 0.5rem;
-      border-radius: 6px;
-      display: inline-block;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .tag-new {
-      background: var(--new-badge-bg);
-      color: var(--new-badge-text);
-    }
-
-    .tag-source {
-      border: 1px solid var(--tag-border);
-      font-weight: 600;
-      background: rgba(0, 0, 0, 0.02);
-    }
-
-    [data-theme="dark"] .tag-source {
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .source-facebook {
-      color: #3b5998;
-      border-color: rgba(59, 89, 152, 0.3);
-    }
-
-    .source-trademe {
-      color: #ff7e00;
-      border-color: rgba(255, 126, 0, 0.3);
-    }
-
-    .model-select {
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 0.15rem 0.4rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: var(--font-functional);
-      outline: none;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: border-color var(--transition-speed);
-    }
-
-    .model-select:hover {
-      border-color: var(--accent-color);
-    }
-
-    .action-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .action-btn:hover {
-      background: var(--accent-bg);
-      color: var(--text-on-accent);
-      border-color: var(--accent-bg);
-    }
-
-    .fav-btn {
-      background: none;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1.15rem;
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .fav-btn:hover {
-      border-color: #ffd700;
-      color: #ffd700;
-    }
-
-    .fav-btn.active {
-      color: #ffd700;
-      border-color: rgba(255, 215, 0, 0.4);
-      background: rgba(255, 215, 0, 0.08);
-    }
-
-    /* Market Analytics CSS */
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      .analytics-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .analytics-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.75rem;
-      box-shadow: var(--card-shadow);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .analytics-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.75rem;
-      color: var(--accent-bg);
-    }
-
-    [data-theme="dark"] .analytics-card h3 {
-      color: var(--text-main);
-    }
-
-    /* Text Histogram Bars */
-    .histogram-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .histogram-label {
-      width: 110px;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    .histogram-bar-wrapper {
-      flex: 1;
-      height: 16px;
-      background: var(--bg-main);
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .histogram-bar {
-      height: 100%;
-      background: var(--accent-color);
-      border-radius: 8px;
-      width: 0;
-      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .histogram-value {
-      width: 50px;
-      text-align: right;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    /* Empty state */
-    .empty-state {
-      padding: 4rem 2rem;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .empty-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-      
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-
-      .header-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-      
-      th:nth-child(3), td:nth-child(3) {
-        display: none; /* Hide location on small screens */
-      }
-      
-      .filter-group-container {
-        flex-direction: column;
-        gap: 1.25rem;
-      }
-      
-      .filters {
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 0.25rem;
-      }
-      
-      .filter-btn {
-        flex: 1;
-        white-space: nowrap;
-        text-align: center;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <h1>Polestar 2 NZ Tracker</h1>
-        <p>Facebook Marketplace & TradeMe Motors Aggregator</p>
+  <div class="app-layout">
+    <!-- Top Bar Header -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <div class="polestar-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Polestar 2 <span class="brand-sub">NZ Tracker</span></h1>
+          <div class="sync-status">
+            <span class="pulse-dot"></span>
+            <span id="statLastChecked">Checking...</span>
+          </div>
+        </div>
       </div>
-      <div class="header-actions">
-        <button class="btn" id="themeToggleBtn">☀ Light Theme</button>
-        <button class="btn btn-accent" id="refreshBtn">🔄 Refresh Data</button>
+
+      <!-- Quick Metrics Ribbon -->
+      <div class="metrics-ribbon">
+        <div class="metric-pill">
+          <span class="metric-label">Active</span>
+          <span class="metric-val" id="statTotal">-</span>
+        </div>
+        <div class="metric-pill" data-source-badge="trademe">
+          <span class="metric-label">TradeMe</span>
+          <span class="metric-val" id="statTradeMe">-</span>
+        </div>
+        <div class="metric-pill" data-source-badge="facebook">
+          <span class="metric-label">Marketplace</span>
+          <span class="metric-val" id="statFacebook">-</span>
+        </div>
+        <div class="metric-pill highlight" id="metricNewContainer">
+          <span class="metric-label">New</span>
+          <span class="metric-val" id="statNew">0</span>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Color Theme" title="Toggle Light/Dark Theme">
+          <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="refreshBtn" aria-label="Reload listings" title="Reload page">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <!-- Stats Panel -->
-    <div class="stats-container">
-      <div class="stat-card">
-        <span class="stat-label">Total Listings</span>
-        <span class="stat-value" id="statTotal">-</span>
+    <!-- Sticky Filter & View Nav Bar -->
+    <nav class="sticky-nav">
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" id="searchInput" placeholder="Filter by trim, price, location, year..." autocomplete="off" spellcheck="false">
       </div>
-      <div class="stat-card" style="border-left-color: #3b5998;">
-        <span class="stat-label">Facebook Ads</span>
-        <span class="stat-value" id="statFacebook" style="color: #a5b4fc;">-</span>
-      </div>
-      <div class="stat-card" style="border-left-color: #ff7e00;">
-        <span class="stat-label">TradeMe Cars</span>
-        <span class="stat-value" id="statTradeMe" style="color: #fed7aa;">-</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">New This Run</span>
-        <span class="stat-value" id="statNew" style="color: #ff9a9e;">-</span>
-        <span class="stat-sublabel" id="statNewBreakdown"></span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Last Scraped (NZT)</span>
-        <span class="stat-value" id="statLastChecked" style="font-size: 1.05rem; line-height: 1.8;">-</span>
-      </div>
-    </div>
 
-    <!-- Navigation Tabs -->
-    <div class="tabs-nav">
-      <button class="tab-btn active" data-tab="listings">📋 Listings Feed</button>
-      <button class="tab-btn" data-tab="analytics">📊 Market Analytics</button>
-    </div>
+      <!-- Quick Filter Pills -->
+      <div class="pill-group" id="timeFilters" role="tablist">
+        <button class="pill active" data-filter="all">All Vehicles</button>
+        <button class="pill" data-filter="drops">Price Drops</button>
+        <button class="pill" data-filter="favorites">Saved ★</button>
+        <button class="pill" data-filter="new">New</button>
+        <button class="pill" data-filter="recent">Last 3 Days</button>
+      </div>
 
-    <!-- View 1: Listings Feed -->
-    <div id="listingsView" class="tab-view active">
-      <!-- Search & Filters -->
-      <div class="controls-card">
-        <div class="controls-top">
-          <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search by title, price, or location...">
+      <div class="pill-divider"></div>
+
+      <!-- Source Pills -->
+      <div class="pill-group" id="sourceFilters">
+        <button class="pill active" data-source="all">All Sources</button>
+        <button class="pill" data-source="trademe">TradeMe</button>
+        <button class="pill" data-source="facebook">Facebook</button>
+      </div>
+
+      <!-- View Switcher -->
+      <div class="view-switch">
+        <button class="view-btn active" data-tab="listings">Feed</button>
+        <button class="view-btn" data-tab="analytics">Market Insights</button>
+      </div>
+    </nav>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Section 1: Listings Feed -->
+      <section id="listingsView" class="tab-view active">
+        <div class="feed-summary-bar">
+          <span id="resultsCount">Loading vehicles...</span>
+          <div class="sort-indicator">Sorted by: Most recent</div>
+        </div>
+
+        <div class="vehicle-list" id="listingsContainer">
+          <div class="empty-state">
+            <div class="loading-spinner"></div>
+            <p>Scanning vehicle listings...</p>
           </div>
         </div>
-        
-        <div class="filter-group-container">
-          <div class="filter-group">
-            <span class="filter-group-label">Filter:</span>
-            <div class="filters" id="timeFilters">
-              <button class="filter-btn active" data-filter="all">All Items</button>
-              <button class="filter-btn" data-filter="favorites">Favorites</button>
-              <button class="filter-btn" data-filter="new">New Additions</button>
-              <button class="filter-btn" data-filter="recent">Last 3 Days</button>
+      </section>
+
+      <!-- Section 2: Market Analytics View (Secondary) -->
+      <section id="analyticsView" class="tab-view">
+        <div class="analytics-container">
+          <div class="analytics-header">
+            <h2>Market Pricing & Variant Breakdown</h2>
+            <p class="section-desc">Real-time statistics computed across all actively tracked listings.</p>
+          </div>
+
+          <div class="analytics-card">
+            <h3>Trim Level Price Distribution</h3>
+            <div class="table-scroll-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Variant</th>
+                    <th>Count</th>
+                    <th>Min</th>
+                    <th>Median</th>
+                    <th>Avg</th>
+                    <th>Max</th>
+                  </tr>
+                </thead>
+                <tbody id="analyticsModelBody"></tbody>
+              </table>
             </div>
           </div>
 
-          <div class="filter-group">
-            <span class="filter-group-label">Source:</span>
-            <div class="filters" id="sourceFilters">
-              <button class="filter-btn active" data-source="all">All Sources</button>
-              <button class="filter-btn" data-source="facebook">Facebook</button>
-              <button class="filter-btn" data-source="trademe">TradeMe</button>
+          <div class="analytics-two-col">
+            <div class="analytics-card">
+              <h3>Price Brackets</h3>
+              <div id="priceDistributionContainer" class="chart-list"></div>
+            </div>
+
+            <div class="analytics-card">
+              <h3>Average Price by Model Year</h3>
+              <div id="depreciationYearContainer" class="chart-list"></div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Listings Table -->
-      <div class="table-container">
-        <table id="listingsTable">
-          <thead>
-            <tr>
-              <th>Vehicle Details</th>
-              <th>Price</th>
-              <th>Location</th>
-              <th style="width: 150px;">Action</th>
-            </tr>
-          </thead>
-          <tbody id="listingsBody">
-            <tr>
-              <td colspan="4" class="empty-state">
-                <div class="empty-icon">⏳</div>
-                <p>Loading listings data...</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+          <div class="analytics-two-col">
+            <div class="analytics-card">
+              <h3>Top Regions</h3>
+              <div id="regionalBreakdownContainer" class="chart-list"></div>
+            </div>
 
-    <!-- View 2: Market Analytics -->
-    <div id="analyticsView" class="tab-view">
-      <div class="analytics-grid">
-        
-        <!-- Table Card: Model Variant Metrics -->
-        <div class="analytics-card" style="grid-column: span 2;">
-          <h3>Model Variant Price Breakdown</h3>
-          <div class="table-container" style="border: none; box-shadow: none; margin-bottom: 0;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Model Variant</th>
-                  <th>Total Active</th>
-                  <th>Min Price</th>
-                  <th>Median Price</th>
-                  <th>Average Price</th>
-                  <th>Max Price</th>
-                </tr>
-              </thead>
-              <tbody id="analyticsModelBody">
-                <!-- Populated dynamically -->
-              </tbody>
-            </table>
+            <div class="analytics-card">
+              <h3>Platform Pricing Comparison</h3>
+              <div class="table-scroll-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Source</th>
+                      <th>Active</th>
+                      <th>Avg Price</th>
+                      <th>Median</th>
+                      <th>Share</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analyticsPlatformBody"></tbody>
+                </table>
+              </div>
+            </div>
           </div>
+
         </div>
-
-        <!-- Price Range Histogram -->
-        <div class="analytics-card">
-          <h3>Price Range Distribution</h3>
-          <div id="priceDistributionContainer">
-            <!-- Populated dynamically -->
-          </div>
-        </div>
-
-        <!-- Depreciation Curve By Model Year -->
-        <div class="analytics-card">
-          <h3>Depreciation Profile (Avg Price by Year)</h3>
-          <div id="depreciationYearContainer">
-            <!-- Populated dynamically -->
-          </div>
-        </div>
-
-        <!-- Regional Listings Share -->
-        <div class="analytics-card">
-          <h3>Top Regions Breakdown</h3>
-          <div id="regionalBreakdownContainer">
-            <!-- Populated dynamically -->
-          </div>
-        </div>
-
-        <!-- Platform Comparison Stats -->
-        <div class="analytics-card">
-          <h3>Platform Comparison Metrics</h3>
-          <div class="table-container" style="border: none; box-shadow: none; margin-bottom: 0;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Platform</th>
-                  <th>Listings</th>
-                  <th>Avg Price</th>
-                  <th>Median Price</th>
-                  <th>Share %</th>
-                </tr>
-              </thead>
-              <tbody id="analyticsPlatformBody">
-                <!-- Populated dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
+      </section>
+    </main>
   </div>
 
-  <!-- Data Script (written by scraper.py) -->
+  <!-- Data Script -->
   <script src="listings.js"></script>
-
-  <!-- Application Controller Logic -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // DOM Elements
-      const body = document.getElementById("listingsBody");
-      const searchInput = document.getElementById("searchInput");
-      const timeFilterBtns = document.querySelectorAll("#timeFilters .filter-btn");
-      const sourceFilterBtns = document.querySelectorAll("#sourceFilters .filter-btn");
-      const statTotal = document.getElementById("statTotal");
-      const statFacebook = document.getElementById("statFacebook");
-      const statTradeMe = document.getElementById("statTradeMe");
-      const statNew = document.getElementById("statNew");
-      const statNewBreakdown = document.getElementById("statNewBreakdown");
-      const statLastChecked = document.getElementById("statLastChecked");
-      const refreshBtn = document.getElementById("refreshBtn");
-      
-      const themeToggleBtn = document.getElementById("themeToggleBtn");
-      const tabBtns = document.querySelectorAll(".tab-btn");
-      const tabViews = document.querySelectorAll(".tab-view");
-      
-      const analyticsModelBody = document.getElementById("analyticsModelBody");
-      const analyticsPlatformBody = document.getElementById("analyticsPlatformBody");
-      const priceDistributionContainer = document.getElementById("priceDistributionContainer");
-      const depreciationYearContainer = document.getElementById("depreciationYearContainer");
-      const regionalBreakdownContainer = document.getElementById("regionalBreakdownContainer");
-
-      // State Management
-      let listings = window.marketplaceListings || [];
-      const meta = window.lastRunMeta || {};
-      let favorites = JSON.parse(localStorage.getItem('polestar_favorites') || '[]');
-      let modelOverrides = JSON.parse(localStorage.getItem('polestar_model_overrides') || '{}');
-      let activeFilter = "all";
-      let activeSource = "all";
-      let searchQuery = "";
-
-      function getModel(item) {
-        if (modelOverrides[item.id]) {
-          return modelOverrides[item.id];
-        }
-        return classifyModel(item.title);
-      }
-
-      // Theme toggle initialization
-      let currentTheme = localStorage.getItem("polestar_theme") || "light";
-      document.documentElement.setAttribute("data-theme", currentTheme);
-      updateThemeButtonUI();
-
-      themeToggleBtn.addEventListener("click", () => {
-        currentTheme = currentTheme === "light" ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", currentTheme);
-        localStorage.setItem("polestar_theme", currentTheme);
-        updateThemeButtonUI();
-      });
-
-      function updateThemeButtonUI() {
-        if (currentTheme === "dark") {
-          themeToggleBtn.innerHTML = "☀ Light Theme";
-        } else {
-          themeToggleBtn.innerHTML = "☾ Midnight Dark";
-        }
-      }
-
-      // Tab switcher logic
-      tabBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const targetTab = btn.getAttribute("data-tab");
-          tabBtns.forEach(b => b.classList.remove("active"));
-          tabViews.forEach(v => v.classList.remove("active"));
-          
-          btn.classList.add("active");
-          document.getElementById(`${targetTab}View`).classList.add("active");
-          
-          if (targetTab === "analytics") {
-            calculateAndRenderAnalytics();
-          }
-        });
-      });
-
-      // Favorites Event Listener delegation
-      body.addEventListener('click', (e) => {
-        const btn = e.target.closest('.fav-btn');
-        if (btn) {
-          const id = btn.getAttribute('data-id');
-          if (favorites.includes(id)) {
-            favorites = favorites.filter(favId => favId !== id);
-          } else {
-            favorites.push(id);
-          }
-          localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
-          render();
-        }
-      });
-
-      // Format Date in NZT
-      function formatDate(isoString) {
-        if (!isoString) return "N/A";
-        const date = new Date(isoString);
-        return date.toLocaleString('en-NZ', {
-          timeZone: 'Pacific/Auckland',
-          day: 'numeric',
-          month: 'short',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
-      }
-
-      // Format currency to NZD
-      function formatCurrency(amount) {
-        if (!amount || isNaN(amount)) return "N/A";
-        return new Intl.NumberFormat('en-NZ', {
-          style: 'currency',
-          currency: 'NZD',
-          maximumFractionDigits: 0
-        }).format(amount);
-      }
-
-      // Parse price to numeric value
-      function parsePrice(priceStr) {
-        if (!priceStr || priceStr === "N/A") return null;
-        const num = parseInt(priceStr.replace(/[^0-9]/g, ""), 10);
-        return isNaN(num) ? null : num;
-      }
-
-      // Helper to classify Polestar 2 Model Variants
-      function classifyModel(title) {
-        const t = title.toLowerCase();
-        if (t.includes("performance")) return "Performance";
-        if (t.includes("lrdm") || t.includes("dual motor") || t.includes("long range dual")) return "LRDM";
-        if (t.includes("lrsm") || t.includes("long range single") || t.includes("long range")) return "LRSM";
-        if (t.includes("srsm") || t.includes("standard range single") || t.includes("standard range")) return "SRSM";
-        return "Unspecified";
-      }
-
-      // Check date range
-      function isWithinDays(isoString, days) {
-        if (!isoString) return false;
-        const date = new Date(isoString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays <= days;
-      }
-
-      // Render Listings Tab
-      function render() {
-        const filtered = listings.filter(item => {
-          const matchesSearch = 
-            item.title.toLowerCase().includes(searchQuery) ||
-            item.price.toLowerCase().includes(searchQuery) ||
-            item.location.toLowerCase().includes(searchQuery);
-
-          if (!matchesSearch) return false;
-
-          if (activeFilter === "new" && !item.is_new) return false;
-          if (activeFilter === "recent" && !isWithinDays(item.scraped_at, 3)) return false;
-          if (activeFilter === "favorites" && !favorites.includes(item.id)) return false;
-
-          if (activeSource !== "all" && item.source !== activeSource) return false;
-
-          return true;
-        });
-
-        filtered.sort((a, b) => new Date(b.scraped_at) - new Date(a.scraped_at));
-
-        if (filtered.length === 0) {
-          body.innerHTML = `
-            <tr>
-              <td colspan="4" class="empty-state">
-                <div class="empty-icon">🚗</div>
-                <p>No Polestar 2 vehicles found matching the filters.</p>
-              </td>
-            </tr>
-          `;
-          return;
-        }
-
-        body.innerHTML = filtered.map(item => {
-          const imageEl = item.image 
-            ? `<img class="listing-thumbnail" src="${item.image}" referrerpolicy="no-referrer" alt="${item.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
-            : '';
-          
-          const fallbackEl = `
-            <div class="thumbnail-fallback" style="${item.image ? 'display:none;' : ''}">
-              ⚡
-            </div>
-          `;
-
-          const newBadge = item.is_new ? `<span class="tag tag-new">New</span>` : '';
-          const sourceText = item.source === "facebook" ? "Facebook" : "TradeMe";
-          const sourceClass = item.source === "facebook" ? "source-facebook" : "source-trademe";
-          const sourceBadge = `<span class="tag tag-source ${sourceClass}">${sourceText}</span>`;
-          const isFav = favorites.includes(item.id);
-
-          const currentModel = getModel(item);
-          const options = ["Unspecified", "SRSM", "LRSM", "LRDM", "Performance"].map(opt => {
-            return `<option value="${opt}" ${currentModel === opt ? 'selected' : ''}>Model: ${opt}</option>`;
-          }).join("");
-          const modelSelect = `<select class="model-select" data-id="${item.id}">${options}</select>`;
-
-          return `
-            <tr>
-              <td>
-                <div class="listing-info">
-                  <div style="position: relative;">
-                    ${imageEl}
-                    ${fallbackEl}
-                  </div>
-                  <div class="listing-details">
-                    <a href="${item.url}" target="_blank" class="listing-title">${item.title}</a>
-                    <div class="listing-meta">
-                      <span>Added: ${formatDate(item.scraped_at)}</span>
-                      ${sourceBadge}
-                      ${modelSelect}
-                      ${newBadge}
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="listing-price">${item.price}</div>
-              </td>
-              <td>
-                <div style="font-weight: 500;">${item.location}</div>
-              </td>
-              <td>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${item.id}" title="Toggle Favorite">
-                    ${isFav ? '★' : '☆'}
-                  </button>
-                  <a href="${item.url}" target="_blank" class="action-btn">View Listing</a>
-                </div>
-              </td>
-            </tr>
-          `;
-        }).join("");
-      }
-
-      // Update Statistics Header Panel
-      function updateStats() {
-        statTotal.textContent = listings.length;
-        
-        const fbCount = listings.filter(item => item.source === "facebook").length;
-        statFacebook.textContent = fbCount;
-        
-        const tmCount = listings.filter(item => item.source === "trademe").length;
-        statTradeMe.textContent = tmCount;
-
-        const newFb = meta.new_facebook ?? 0;
-        const newTm = meta.new_trademe ?? 0;
-        statNew.textContent = newFb + newTm;
-        if (statNewBreakdown) {
-          statNewBreakdown.textContent = `FB: ${newFb} · TM: ${newTm}`;
-        }
-
-        const ts = meta.last_scraped || null;
-        statLastChecked.textContent = ts ? formatDate(ts) : "Never";
-      }
-
-      // Market Analytics View Calculation & Rendering
-      function calculateAndRenderAnalytics() {
-        if (listings.length === 0) return;
-
-        // Group listings with parsed prices
-        const analyzed = listings.map(item => ({
-          ...item,
-          numericPrice: parsePrice(item.price),
-          variant: getModel(item),
-          year: parseInt((item.title.match(/\b(202\d)\b/) || [])[0], 10) || null
-        }));
-
-        // Helper to calculate statistics
-        function getStats(items) {
-          const prices = items.map(i => i.numericPrice).filter(p => p !== null).sort((a, b) => a - b);
-          if (prices.length === 0) {
-            return { count: items.length, avg: 0, median: 0, min: 0, max: 0 };
-          }
-          const sum = prices.reduce((a, b) => a + b, 0);
-          const avg = sum / prices.length;
-          
-          let median;
-          const mid = Math.floor(prices.length / 2);
-          if (prices.length % 2 !== 0) {
-            median = prices[mid];
-          } else {
-            median = (prices[mid - 1] + prices[mid]) / 2;
-          }
-
-          return {
-            count: items.length,
-            avg: Math.round(avg),
-            median: Math.round(median),
-            min: prices[0],
-            max: prices[prices.length - 1]
-          };
-        }
-
-        // 1. Render Model Variants
-        const variants = ["SRSM", "LRSM", "LRDM", "Performance", "Unspecified"];
-        const variantRows = variants.map(v => {
-          const items = analyzed.filter(i => i.variant === v);
-          const s = getStats(items);
-          return `
-            <tr>
-              <td style="font-weight: 600;">${v === 'Unspecified' ? 'Other/Unspecified' : v}</td>
-              <td>${s.count}</td>
-              <td style="color: var(--text-muted);">${s.min > 0 ? formatCurrency(s.min) : 'N/A'}</td>
-              <td style="color: var(--accent-color); font-weight: 600;">${s.median > 0 ? formatCurrency(s.median) : 'N/A'}</td>
-              <td>${s.avg > 0 ? formatCurrency(s.avg) : 'N/A'}</td>
-              <td style="color: var(--text-muted);">${s.max > 0 ? formatCurrency(s.max) : 'N/A'}</td>
-            </tr>
-          `;
-        });
-
-        // Add overall market row at the end
-        const overall = getStats(analyzed);
-        variantRows.push(`
-          <tr style="border-top: 2px solid var(--border-color); background: rgba(184,134,11,0.05); font-weight:700;">
-            <td>Overall Market</td>
-            <td>${overall.count}</td>
-            <td>${formatCurrency(overall.min)}</td>
-            <td style="color: var(--accent-color);">${formatCurrency(overall.median)}</td>
-            <td>${formatCurrency(overall.avg)}</td>
-            <td>${formatCurrency(overall.max)}</td>
-          </tr>
-        `);
-        analyticsModelBody.innerHTML = variantRows.join("");
-
-        // 2. Render Price Distribution Histogram
-        const prices = analyzed.map(i => i.numericPrice).filter(p => p !== null);
-        const ranges = [
-          { label: "Under $35k", check: p => p < 35000 },
-          { label: "$35k - $42k", check: p => p >= 35000 && p < 42000 },
-          { label: "$42k - $50k", check: p => p >= 42000 && p < 50000 },
-          { label: "$50k - $65k", check: p => p >= 50000 && p < 65000 },
-          { label: "$65k+", check: p => p >= 65000 }
-        ];
-
-        let maxCount = 0;
-        const rangeCounts = ranges.map(r => {
-          const count = prices.filter(r.check).length;
-          if (count > maxCount) maxCount = count;
-          return { label: r.label, count };
-        });
-
-        priceDistributionContainer.innerHTML = rangeCounts.map(r => {
-          const pct = maxCount > 0 ? (r.count / maxCount) * 100 : 0;
-          return `
-            <div class="histogram-row">
-              <span class="histogram-label">${r.label}</span>
-              <div class="histogram-bar-wrapper">
-                <div class="histogram-bar" style="width: ${pct}%"></div>
-              </div>
-              <span class="histogram-value">${r.count}</span>
-            </div>
-          `;
-        }).join("");
-
-        // 3. Render Depreciation By Year
-        const years = [2021, 2022, 2023, 2024, 2025, 2026];
-        const yearStats = years.map(yr => {
-          const items = analyzed.filter(i => i.year === yr);
-          const s = getStats(items);
-          return { year: yr, ...s };
-        }).filter(y => y.count > 0);
-
-        let maxYearAvg = Math.max(...yearStats.map(y => y.avg), 1);
-        depreciationYearContainer.innerHTML = yearStats.map(y => {
-          const pct = (y.avg / maxYearAvg) * 100;
-          return `
-            <div class="histogram-row">
-              <span class="histogram-label" style="width: 60px;">${y.year}</span>
-              <div class="histogram-bar-wrapper">
-                <div class="histogram-bar" style="width: ${pct}%; background: var(--accent-bg);"></div>
-              </div>
-              <span class="histogram-value" style="width: 90px; text-align:right;">${formatCurrency(y.avg)}</span>
-            </div>
-          `;
-        }).join("");
-
-        // 4. Regional Distribution
-        const locationMap = {};
-        analyzed.forEach(i => {
-          const loc = i.location.split(",").pop().trim();
-          if (loc && loc !== "Unknown") {
-            locationMap[loc] = (locationMap[loc] || 0) + 1;
-          }
-        });
-
-        const sortedLocations = Object.entries(locationMap)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 5); // top 5 regions
-
-        let maxLocCount = sortedLocations.length > 0 ? sortedLocations[0][1] : 1;
-        regionalBreakdownContainer.innerHTML = sortedLocations.map(([name, count]) => {
-          const pct = (count / maxLocCount) * 100;
-          return `
-            <div class="histogram-row">
-              <span class="histogram-label" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${name}">${name}</span>
-              <div class="histogram-bar-wrapper">
-                <div class="histogram-bar" style="width: ${pct}%; background: var(--accent-color);"></div>
-              </div>
-              <span class="histogram-value">${count}</span>
-            </div>
-          `;
-        }).join("");
-
-        // 5. Platform Comparison
-        const sources = ["facebook", "trademe"];
-        analyticsPlatformBody.innerHTML = sources.map(src => {
-          const items = analyzed.filter(i => i.source === src);
-          const s = getStats(items);
-          const share = listings.length > 0 ? Math.round((items.length / listings.length) * 100) : 0;
-          return `
-            <tr>
-              <td style="font-weight: 600; text-transform: capitalize;">${src === 'trademe' ? 'TradeMe' : 'Facebook'}</td>
-              <td>${s.count}</td>
-              <td>${s.avg > 0 ? formatCurrency(s.avg) : 'N/A'}</td>
-              <td style="color: var(--accent-color); font-weight: 600;">${s.median > 0 ? formatCurrency(s.median) : 'N/A'}</td>
-              <td>${share}%</td>
-            </tr>
-          `;
-        }).join("");
-      }
-
-      // Search event listener
-      searchInput.addEventListener("input", (e) => {
-        searchQuery = e.target.value.toLowerCase().trim();
-        render();
-      });
-
-      // Time Filter buttons event listener
-      timeFilterBtns.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          timeFilterBtns.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          activeFilter = btn.getAttribute("data-filter");
-          render();
-        });
-      });
-
-      // Source Filter buttons event listener
-      sourceFilterBtns.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          sourceFilterBtns.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          activeSource = btn.getAttribute("data-source");
-          render();
-        });
-      });
-
-      // Model Select Change Event Listener
-      body.addEventListener('change', (e) => {
-        if (e.target.classList.contains('model-select')) {
-          const id = e.target.getAttribute('data-id');
-          const val = e.target.value;
-          
-          const defaultVal = classifyModel(listings.find(i => i.id === id).title);
-          if (val === defaultVal) {
-            delete modelOverrides[id];
-          } else {
-            modelOverrides[id] = val;
-          }
-          localStorage.setItem('polestar_model_overrides', JSON.stringify(modelOverrides));
-          render();
-        }
-      });
-
-      // Refresh Button Event Listener
-      refreshBtn.addEventListener("click", () => {
-        window.location.reload();
-      });
-
-      // Initialize
-      updateStats();
-      render();
-    });
-  </script>
+  <!-- Application Controller -->
+  <script src="app.js" defer></script>
 </body>
 </html>

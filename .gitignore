@@ -9,3 +9,9 @@ venv/
 run_meta.json
 # Temporary file created by GitHub Actions fetch step
 listings_raw.json
+
+# SQLite local database files
+*.db
+*.db-wal
+*.db-shm
+data/

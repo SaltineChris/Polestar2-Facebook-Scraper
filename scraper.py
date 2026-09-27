@@ -1,100 +1,278 @@
+"""
+scraper.py — High-Performance Concurrent Scraper for Polestar 2 Listings
+Scrapes Facebook Marketplace (North & South Island) and TradeMe Motors concurrently
+using async Playwright with network resource blocking and SQLite persistence.
+"""
 import os
 import sys
 import json
 import re
 import datetime
-from playwright.sync_api import sync_playwright
+import asyncio
+from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 
+import db
+
 # Reconfigure stdout to use UTF-8 (prevents encoding crashes on Windows terminals)
-if sys.stdout.encoding != 'utf-8':
+if hasattr(sys.stdout, 'reconfigure') and sys.stdout.encoding != 'utf-8':
     try:
         sys.stdout.reconfigure(encoding='utf-8')
-    except AttributeError:
+    except Exception:
         pass
 
-# Define paths
+# Paths
 WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_JSON_PATH = os.path.join(WORKSPACE_DIR, "listings.json")
-DATA_JS_PATH = os.path.join(WORKSPACE_DIR, "listings.js")
+DATA_DIR = os.getenv("DATA_DIR", WORKSPACE_DIR)
+os.makedirs(DATA_DIR, exist_ok=True)
+DATA_JSON_PATH = os.path.join(DATA_DIR, "listings.json")
+DATA_JS_PATH = os.path.join(DATA_DIR, "listings.js")
+RUN_META_PATH = os.path.join(DATA_DIR, "run_meta.json")
 
-def parse_price_number(price_str):
-    # Extract digits
-    digits = re.sub(r'\D', '', price_str)
-    if not digits:
+# Precompiled regex patterns for speed
+CLEAN_CHARS_RE = re.compile(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]')
+PRICE_DIGITS_RE = re.compile(r'\D')
+FB_ITEM_RE = re.compile(r'/marketplace/item/(\d+)')
+TM_ITEM_RE = re.compile(r'/listing/(\d+)|/(\d+)\.htm|(\d+)$')
+
+SEARCH_TARGETS = [
+    {
+        "name": "Facebook Marketplace - North Island (Auckland + 500km)",
+        "url": "https://www.facebook.com/marketplace/auckland/search/?query=polestar%202&exact=false&radius=500",
+        "source": "facebook"
+    },
+    {
+        "name": "Facebook Marketplace - South Island (Christchurch + 500km)",
+        "url": "https://www.facebook.com/marketplace/christchurch/search/?query=polestar%202&exact=false&radius=500",
+        "source": "facebook"
+    },
+    {
+        "name": "TradeMe Motors - National (New Zealand)",
+        "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2",
+        "source": "trademe"
+    }
+]
+
+
+def clean_text(text: str) -> str:
+    """Strip invalid control characters and trim whitespace."""
+    if not text:
+        return ""
+    return CLEAN_CHARS_RE.sub('', text).strip()
+
+
+def parse_price_number(price_str: str) -> int:
+    """Extract digits to integer."""
+    if not price_str:
         return 0
-    return int(digits)
+    digits = PRICE_DIGITS_RE.sub('', price_str)
+    return int(digits) if digits else 0
 
-def load_existing_listings():
-    if os.path.exists(DATA_JSON_PATH):
-        try:
-            with open(DATA_JSON_PATH, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                # Migration: ensure all existing records have a source and clean ID prefix
-                migrated = {}
-                for item_id, item in data.items():
-                    if "source" not in item:
-                        item["source"] = "facebook"
-                    # Ensure ID format uses prefix (fb_ or tm_) to prevent clashes
-                    new_id = item["id"]
-                    if not new_id.startswith("fb_") and not new_id.startswith("tm_"):
-                        if item["source"] == "facebook":
-                            new_id = f"fb_{new_id}"
-                        else:
-                            new_id = f"tm_{new_id}"
-                    item["id"] = new_id
-                    migrated[new_id] = item
-                return migrated
-        except Exception as e:
-            print(f"Error loading listings.json: {e}")
-    return {}
 
-RUN_META_PATH = os.path.join(WORKSPACE_DIR, "run_meta.json")
+async def block_unnecessary_resources(route):
+    """Abort image, media, and font downloads to cut network latency and memory."""
+    if route.request.resource_type in ["image", "media", "font"]:
+        await route.abort()
+    else:
+        await route.continue_()
 
-def save_listings(listings, run_meta=None):
-    # Save to JSON
-    with open(DATA_JSON_PATH, "w", encoding="utf-8") as f:
-        json.dump(listings, f, indent=2, ensure_ascii=False)
-    
-    # Save run metadata (last scrape time, new counts by source)
-    if run_meta:
-        with open(RUN_META_PATH, "w", encoding="utf-8") as f:
-            json.dump(run_meta, f, indent=2, ensure_ascii=False)
-    
-    # Save to JS for local HTML client-side loading
-    js_content = f"window.marketplaceListings = {json.dumps(list(listings.values()), indent=2, ensure_ascii=False)};\n"
-    js_content += f"window.lastRunMeta = {json.dumps(run_meta or {}, indent=2, ensure_ascii=False)};"
-    with open(DATA_JS_PATH, "w", encoding="utf-8") as f:
-        f.write(js_content)
 
-def scrape():
-    print(f"Starting Polestar 2 scraper at {datetime.datetime.now().isoformat()}...")
-    existing = load_existing_listings()
-    new_additions = []
-    new_by_source = {"facebook": 0, "trademe": 0}
-    current_listings = {}
+async def scrape_single_target(context, target: dict) -> list:
+    """Scrape a single search target asynchronously."""
+    source = target["source"]
+    name = target["name"]
+    url = target["url"]
+    print(f"[{source.upper()}] Starting scrape for: {name}")
 
-    SEARCH_TARGETS = [
-        {
-            "name": "Facebook Marketplace - North Island (Auckland + 500km)",
-            "url": "https://www.facebook.com/marketplace/auckland/search/?query=polestar%202&exact=false&radius=500",
-            "source": "facebook"
-        },
-        {
-            "name": "Facebook Marketplace - South Island (Christchurch + 500km)",
-            "url": "https://www.facebook.com/marketplace/christchurch/search/?query=polestar%202&exact=false&radius=500",
-            "source": "facebook"
-        },
-        {
-            "name": "TradeMe Motors - National (New Zealand)",
-            "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2",
-            "source": "trademe"
-        }
-    ]
+    page = await context.new_page()
+    listings = []
 
-    with sync_playwright() as p:
-        # Launch browser with human-like configurations
-        browser = p.chromium.launch(
+    try:
+        # Route interception: abort heavy media/fonts
+        await page.route("**/*", block_unnecessary_resources)
+
+        print(f"[{source.upper()}] Navigating to: {url}")
+        wait_until = "domcontentloaded"
+        await page.goto(url, wait_until=wait_until, timeout=50000)
+
+        # Dynamic wait for content
+        if source == "facebook":
+            try:
+                await page.wait_for_selector('a[href*="/marketplace/item/"]', timeout=8000)
+            except Exception:
+                pass
+        else:
+            try:
+                await page.wait_for_selector('a[href*="/listing/"], a[href*="/a/motors/cars/"]', timeout=8000)
+            except Exception:
+                pass
+
+        # Scroll to load dynamic items
+        await page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
+        await asyncio.sleep(2.0)
+        await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+        await asyncio.sleep(2.0)
+
+        html_content = await page.content()
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        if source == "facebook":
+            links = soup.find_all("a", href=FB_ITEM_RE)
+            print(f"[{source.upper()}] Found {len(links)} raw marketplace links.")
+
+            for link in links:
+                href = link.get("href", "")
+                if href.startswith("/"):
+                    href = "https://www.facebook.com" + href
+                url_clean = href.split("?")[0]
+
+                match = FB_ITEM_RE.search(url_clean)
+                if not match:
+                    continue
+                item_id = match.group(1)
+                uniq_id = f"fb_{item_id}"
+
+                text_content = link.get_text(separator="\n")
+                lines = [clean_text(line) for line in text_content.split("\n") if clean_text(line)]
+
+                img = link.find("img")
+                img_url = img.get("src") if img else ""
+
+                price = "N/A"
+                title = "Unknown Polestar 2"
+                location = "Unknown"
+
+                if len(lines) >= 1:
+                    price = lines[0]
+                if len(lines) >= 2:
+                    title = lines[1]
+                if len(lines) >= 3:
+                    location = lines[2]
+
+                if "polestar" not in title.lower():
+                    continue
+
+                # Filter: Price must be >= $20,000 to weed out accessories/parts
+                price_num = parse_price_number(price)
+                if price_num < 20000:
+                    continue
+
+                listings.append({
+                    "id": uniq_id,
+                    "raw_id": item_id,
+                    "title": title,
+                    "price": price,
+                    "price_num": price_num,
+                    "location": location,
+                    "url": url_clean,
+                    "image": img_url,
+                    "source": "facebook",
+                    "scraped_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
+                })
+
+        elif source == "trademe":
+            all_links = soup.find_all("a", href=True)
+            listing_links = [
+                l for l in all_links
+                if "/listing/" in l['href'] or "/a/motors/cars/" in l['href']
+            ]
+            print(f"[{source.upper()}] Found {len(listing_links)} potential TradeMe listing links.")
+
+            for link in listing_links:
+                href = link.get("href", "")
+                if not href.startswith("http"):
+                    href = "https://www.trademe.co.nz" + href
+                url_clean = href.split("?")[0]
+
+                match = TM_ITEM_RE.search(url_clean)
+                if not match:
+                    continue
+                item_id = match.group(1) or match.group(2) or match.group(3)
+                if not item_id:
+                    continue
+                uniq_id = f"tm_{item_id}"
+
+                text_content = link.get_text(separator="\n")
+                lines = [clean_text(line) for line in text_content.split("\n") if clean_text(line)]
+                if len(lines) < 2:
+                    continue
+
+                img = link.find("img")
+                img_url = ""
+                if img:
+                    img_url = img.get("src") or img.get("data-src") or img.get("srcset") or ""
+                    if img_url.startswith("//"):
+                        img_url = "https:" + img_url
+
+                title = "Unknown Polestar 2"
+                price = "N/A"
+                location = "Unknown"
+
+                # Find title line containing "Polestar" and "2"
+                polestar_idx = -1
+                for i, line in enumerate(lines):
+                    if "polestar" in line.lower() and "2" in line:
+                        polestar_idx = i
+                        break
+
+                if polestar_idx != -1:
+                    title = lines[polestar_idx]
+                    if polestar_idx + 1 < len(lines):
+                        next_line = lines[polestar_idx + 1]
+                        if not next_line.startswith("$") and "km" not in next_line.lower() and len(next_line) > 2:
+                            title += " " + next_line
+
+                prices = [l for l in lines if l.startswith("$") and any(c.isdigit() for c in l)]
+                if prices:
+                    price = prices[0]
+
+                km_idx = -1
+                for i, line in enumerate(lines):
+                    if line.endswith(" km") or line.endswith(" km (approx)"):
+                        km_idx = i
+                        break
+
+                if km_idx > 0:
+                    location = lines[km_idx - 1]
+
+                if "polestar" not in title.lower():
+                    continue
+
+                price_num = parse_price_number(price)
+                if price_num < 20000:
+                    continue
+
+                listings.append({
+                    "id": uniq_id,
+                    "raw_id": item_id,
+                    "title": title,
+                    "price": price,
+                    "price_num": price_num,
+                    "location": location,
+                    "url": url_clean,
+                    "image": img_url,
+                    "source": "trademe",
+                    "scraped_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
+                })
+
+    except Exception as e:
+        print(f"[{source.upper()}] Error scraping {name}: {e}")
+    finally:
+        await page.close()
+
+    print(f"[{source.upper()}] Finished {name}: extracted {len(listings)} valid listings.")
+    return listings
+
+
+async def scrape_async():
+    """Run all target scrapes concurrently and persist to SQLite + static files."""
+    start_time = datetime.datetime.now()
+    print(f"=== Starting Concurrent Polestar 2 Scraper at {start_time.isoformat()} ===")
+
+    conn = db.init_db()
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
             headless=True,
             args=[
                 "--disable-blink-features=AutomationControlled",
@@ -102,271 +280,91 @@ def scrape():
                 "--disable-setuid-sandbox"
             ]
         )
-        
-        # Create context with standard user agent and viewport
-        context = browser.new_context(
+
+        context = await browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             viewport={"width": 1920, "height": 1080},
             locale="en-NZ",
             timezone_id="Pacific/Auckland"
         )
-        
-        for target in SEARCH_TARGETS:
-            print(f"\nScraping location target: {target['name']}")
-            page = context.new_page()
-            
-            # Go to search URL
-            print(f"Navigating to: {target['url']}")
-            try:
-                # TradeMe is heavy, load with domcontentloaded
-                wait_until = "domcontentloaded" if target["source"] == "trademe" else "networkidle"
-                page.goto(target['url'], wait_until=wait_until, timeout=45000)
-                
-                # Wait for content hydration
-                page.wait_for_timeout(10000 if target["source"] == "trademe" else 5000)
-                
-                # Scroll down to load more results
-                print("Scrolling page to load more listings...")
-                page.evaluate("window.scrollTo(0, document.body.scrollHeight / 2)")
-                page.wait_for_timeout(3000)
-                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                page.wait_for_timeout(3000)
 
-                # Grab page HTML content
-                html_content = page.content()
-                soup = BeautifulSoup(html_content, "html.parser")
-                
-                if target["source"] == "facebook":
-                    # Facebook parsing logic
-                    links = soup.find_all("a", href=re.compile(r"/marketplace/item/\d+"))
-                    print(f"Found {len(links)} raw Facebook marketplace links.")
+        # Scrape all targets concurrently
+        results = await asyncio.gather(*[
+            scrape_single_target(context, target)
+            for target in SEARCH_TARGETS
+        ], return_exceptions=True)
 
-                    for link in links:
-                        href = link.get("href")
-                        if href.startswith("/"):
-                            href = "https://www.facebook.com" + href
-                        url_clean = href.split("?")[0]
-                        
-                        match = re.search(r"/marketplace/item/(\d+)", url_clean)
-                        if not match:
-                            continue
-                        item_id = match.group(1)
-                        uniq_id = f"fb_{item_id}"
-                        
-                        if uniq_id in current_listings:
-                            continue
-                            
-                        text_content = link.get_text(separator="\n")
-                        lines = [line.strip() for line in text_content.split("\n") if line.strip()]
-                        
-                        img = link.find("img")
-                        img_url = img.get("src") if img else ""
+        await browser.close()
 
-                        price = "N/A"
-                        title = "Unknown Polestar 2"
-                        location = "Unknown"
-                        
-                        if len(lines) >= 1:
-                            price = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[0])
-                        if len(lines) >= 2:
-                            title = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[1])
-                        if len(lines) >= 3:
-                            location = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[2])
-                            
-                        if "polestar" not in title.lower():
-                            continue
+    # Deduplicate and upsert into SQLite
+    all_scraped = []
+    seen_ids = set()
+    for res in results:
+        if isinstance(res, list):
+            for item in res:
+                if item["id"] not in seen_ids:
+                    seen_ids.add(item["id"])
+                    all_scraped.append(item)
 
-                        # Filter: Price must be >= $20,000 to weed out accessories/parts
-                        price_num = parse_price_number(price)
-                        if price_num < 20000:
-                            print(f"Skipping Facebook listing under $20k: {title} ({price})")
-                            continue
+    print(f"\nTotal unique valid listings scraped: {len(all_scraped)}")
 
-                        current_listings[uniq_id] = {
-                            "id": uniq_id,
-                            "raw_id": item_id,
-                            "title": title,
-                            "price": price,
-                            "location": location,
-                            "url": url_clean,
-                            "image": img_url,
-                            "source": "facebook",
-                            "scraped_at": datetime.datetime.now().isoformat(),
-                            "is_new": False
-                        }
-                        
-                elif target["source"] == "trademe":
-                    # TradeMe parsing logic
-                    links = soup.find_all("a", href=True)
-                    listing_links = []
-                    for l in links:
-                        href = l['href']
-                        if "/listing/" in href or "/a/motors/cars/" in href:
-                            listing_links.append(l)
-                            
-                    print(f"Found {len(listing_links)} potential TradeMe listing links.")
-                    
-                    for link in listing_links:
-                        href = link.get("href")
-                        if not href.startswith("http"):
-                            href = "https://www.trademe.co.nz" + href
-                        url_clean = href.split("?")[0]
-                        
-                        match = re.search(r"/listing/(\d+)|/(\d+)\.htm", url_clean)
-                        if not match:
-                            match = re.search(r"(\d+)$", url_clean)
-                            
-                        if not match:
-                            continue
-                        item_id = match.group(1) or match.group(2)
-                        uniq_id = f"tm_{item_id}"
-                        
-                        if uniq_id in current_listings:
-                            continue
-                            
-                        text_content = link.get_text(separator="\n")
-                        lines = [line.strip() for line in text_content.split("\n") if line.strip()]
-                        
-                        if len(lines) < 2:
-                            continue
-                            
-                        img = link.find("img")
-                        img_url = ""
-                        if img:
-                            img_url = img.get("src") or img.get("data-src") or img.get("srcset") or ""
-                            if img_url.startswith("//"):
-                                img_url = "https:" + img_url
-                        
-                        # Use TradeMe parsing heuristics
-                        title = "Unknown Polestar 2"
-                        price = "N/A"
-                        location = "Unknown"
-                        
-                        # Find title line containing "Polestar 2" (usually has year)
-                        polestar_idx = -1
-                        for i, line in enumerate(lines):
-                            if "polestar" in line.lower() and "2" in line:
-                                polestar_idx = i
-                                break
-                        
-                        if polestar_idx != -1:
-                            title = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[polestar_idx])
-                            # Append the next line if it adds submodel context
-                            if polestar_idx + 1 < len(lines):
-                                next_line = lines[polestar_idx + 1]
-                                if not next_line.startswith("$") and "km" not in next_line.lower() and len(next_line) > 2:
-                                    title += " " + re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', next_line)
-                        
-                        # Find price starting with "$"
-                        prices = [l for l in lines if l.startswith("$") and any(c.isdigit() for c in l)]
-                        if prices:
-                            price = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', prices[0])
-                            
-                        # Find location: search for line ending in " km" and get preceding
-                        km_idx = -1
-                        for i, line in enumerate(lines):
-                            if line.endswith(" km") or line.endswith(" km (approx)"):
-                                km_idx = i
-                                break
-                        
-                        if km_idx > 0:
-                            location = re.sub(r'[\ufffc\ufffd\x00-\x08\x0b-\x0c\x0e-\x1f]', '', lines[km_idx - 1])
-                        
-                        # Clean up name/brand filters
-                        if "polestar" not in title.lower():
-                            continue
-                            
-                        # Filter: Price must be >= $20,000
-                        price_num = parse_price_number(price)
-                        if price_num < 20000:
-                            print(f"Skipping TradeMe listing under $20k: {title} ({price})")
-                            continue
-                            
-                        current_listings[uniq_id] = {
-                            "id": uniq_id,
-                            "raw_id": item_id,
-                            "title": title,
-                            "price": price,
-                            "location": location,
-                            "url": url_clean,
-                            "image": img_url,
-                            "source": "trademe",
-                            "scraped_at": datetime.datetime.now().isoformat(),
-                            "is_new": False
-                        }
-                        
-            except Exception as e:
-                print(f"Error scraping {target['name']}: {e}")
-            finally:
-                page.close()
+    new_additions = []
+    price_drops = []
+    new_by_source = {"facebook": 0, "trademe": 0}
 
-        browser.close()
+    for item in all_scraped:
+        updated = db.upsert_scraped_listing(conn, item)
+        if updated.get("is_new"):
+            new_additions.append(updated)
+            src = updated.get("source", "facebook")
+            new_by_source[src] = new_by_source.get(src, 0) + 1
+            print(f"[NEW LISTING] [{src.upper()}] {updated['title']} - {updated['price']}")
+        if (updated.get("price_drop") or 0) > 0:
+            price_drops.append(updated)
 
-    # Compare with existing listings
-    print(f"\nScraped {len(current_listings)} valid listings across all targets.")
-    
-    # Update listings. Set "is_new" to True for new listings
-    updated_listings = {}
-    for item_id, data in current_listings.items():
-        if item_id not in existing:
-            data["is_new"] = True
-            new_additions.append(data)
-            source = data.get("source", "facebook")
-            new_by_source[source] = new_by_source.get(source, 0) + 1
-            print(f"NEW LISTING FOUND [{data['source'].upper()}]: {data['title']} - {data['price']}")
-        else:
-            # Preserve scraped date of original discovery
-            data["scraped_at"] = existing[item_id].get("scraped_at", data["scraped_at"])
-            data["is_new"] = False
-        
-        updated_listings[item_id] = data
-
-    # Keep any listings that were in the database but not on the first page, just in case
-    for item_id, data in existing.items():
-        if item_id not in updated_listings:
-            data["is_new"] = False
-            updated_listings[item_id] = data
-
-    # Build run metadata
     now_utc = datetime.datetime.now(datetime.timezone.utc)
     run_meta = {
         "last_scraped": now_utc.isoformat(),
         "new_facebook": new_by_source.get("facebook", 0),
         "new_trademe": new_by_source.get("trademe", 0),
-        "total_facebook": sum(1 for d in updated_listings.values() if d.get("source") == "facebook"),
-        "total_trademe": sum(1 for d in updated_listings.values() if d.get("source") == "trademe"),
+        "price_drops": len(price_drops)
     }
 
-    # Save to files
-    save_listings(updated_listings, run_meta)
-    print(f"Saved {len(updated_listings)} total listings to database.")
-    
-    # Auto-push data updates to GitHub so GitHub Pages dashboard is updated in real-time
-    # Skipped if: running inside GitHub Actions, or SKIP_GIT_PUSH=1 is set (e.g. on RPi where
-    # GitHub Actions fetches from the REST API instead)
+    meta = db.export_to_files(conn, run_meta)
+    db.record_scrape_run(conn, meta)
+
+    elapsed = (datetime.datetime.now() - start_time).total_seconds()
+    print(f"=== Scrape completed in {elapsed:.1f}s ===")
+    print(f"Saved {meta['total_facebook'] + meta['total_trademe']} total active listings.")
+    print(f"New: {meta['new_facebook']} Facebook, {meta['new_trademe']} TradeMe. Price drops: {len(price_drops)}.")
+
+    # Git auto-push if configured and changes detected
     if os.getenv("GITHUB_ACTIONS") != "true" and os.getenv("SKIP_GIT_PUSH") != "1":
         import subprocess
         try:
-            # Check if there are changes in listings files
             status = subprocess.run(["git", "status", "--porcelain", DATA_JSON_PATH, DATA_JS_PATH], capture_output=True, text=True)
             if status.stdout.strip():
                 print("Detected changes in listings data. Committing and pushing to GitHub...")
                 subprocess.run(["git", "add", DATA_JSON_PATH, DATA_JS_PATH], check=True)
-                subprocess.run(["git", "commit", "-m", "Auto-update listings data"], check=True)
+                subprocess.run(["git", "commit", "-m", "Auto-update listings data [skip ci]"], check=True)
                 subprocess.run(["git", "push"], check=True)
                 print("Successfully pushed updates to GitHub.")
             else:
                 print("No data changes detected. Skipping git push.")
         except Exception as e:
-            print(f"Git auto-push failed: {e}")
-        
+            print(f"Git auto-push check failed: {e}")
+
     return new_additions
+
+
+def scrape():
+    """Synchronous entry point for callers like api_server.py or bat scripts."""
+    return asyncio.run(scrape_async())
+
 
 if __name__ == "__main__":
     new_items = scrape()
     if new_items:
         print(f"\nNOTIFICATION: {len(new_items)} new Polestar 2 listing(s) found!")
-        for item in new_items:
-            print(f"- [{item['source'].upper()}] {item['title']} for {item['price']} ({item['url']})")
     else:
-        print("\nNo new listings found.")
+        print("\nNo new listings found in this run.")
