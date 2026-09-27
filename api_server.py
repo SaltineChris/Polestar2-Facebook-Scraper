@@ -29,14 +29,14 @@ if hasattr(sys.stdout, 'reconfigure') and sys.stdout.encoding != 'utf-8':
     except Exception:
         pass
 
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.getenv("DATA_DIR", BASE_DIR)
+os.makedirs(DATA_DIR, exist_ok=True)
 
-# CORS: only allow requests from the GitHub Pages dashboard
-CORS(app, origins=[
-    "https://polestar.sivoravong.com",
-    "http://localhost",
-    "http://127.0.0.1",
-])
+app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
+
+# CORS: allow dashboard requests from GitHub Pages and local development
+CORS(app)
 
 # Rate limiting: default 30 requests/minute per IP
 limiter = Limiter(
@@ -46,28 +46,36 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.getenv("DATA_DIR", BASE_DIR)
-os.makedirs(DATA_DIR, exist_ok=True)
-
-# API_TOKEN is required — server refuses to start without it
-API_TOKEN = os.getenv("API_TOKEN")
-if not API_TOKEN:
-    raise RuntimeError(
-        "API_TOKEN environment variable is not set. "
-        "Set it to a strong secret to secure the API (e.g. API_TOKEN=your-secret-here)."
-    )
+# API_TOKEN for securing administrative endpoints (optional in local dev)
+API_TOKEN = os.getenv("API_TOKEN", "")
 
 is_scraping = False
 scrape_lock = threading.Lock()
+SCRAPE_COOLDOWN_SECONDS = 3600  # 1-hour minimum window between scrapes
+
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return jsonify({
+        "status": "rate_limited",
+        "error": "Rate limit exceeded",
+        "message": "Scraper can only be run once per hour. Please wait before triggering another update."
+    }), 429
+
+
+@app.route("/", methods=["GET"])
+def index():
+    """Serve the tracker dashboard."""
+    return app.send_static_file("index.html")
 
 
 def require_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        auth = request.headers.get("Authorization", "")
-        if auth != f"Bearer {API_TOKEN}":
-            abort(401)
+        if API_TOKEN:
+            auth = request.headers.get("Authorization", "")
+            if auth != f"Bearer {API_TOKEN}":
+                abort(401)
         return f(*args, **kwargs)
     return decorated
 
@@ -175,16 +183,50 @@ def run_scrape_background():
     return True
 
 
+def get_seconds_since_last_scrape():
+    """Return seconds elapsed since the last completed scrape recorded in run_meta.json."""
+    meta_path = os.path.join(DATA_DIR, "run_meta.json")
+    if os.path.exists(meta_path):
+        try:
+            with open(meta_path, "r", encoding="utf-8") as f:
+                meta = json.load(f)
+            ls = meta.get("last_scraped")
+            if ls:
+                dt = datetime.datetime.fromisoformat(ls)
+                now = datetime.datetime.now(datetime.timezone.utc)
+                return max(0, (now - dt).total_seconds())
+        except Exception:
+            pass
+    return None
+
+
 @app.route("/scrape", methods=["POST"])
-@require_token
 @limiter.limit("1 per hour")
 def trigger_scrape():
-    """Trigger an immediate background scrape run."""
+    """
+    Trigger an immediate background scrape run.
+    Rate limited to once per hour, enforced server-side.
+    No credentials required.
+    """
+    global is_scraping
     if is_scraping:
-        return jsonify({"status": "busy", "message": "Scrape already in progress"}), 409
+        return jsonify({"status": "busy", "message": "A scrape is already in progress on the server."}), 409
+
+    # Enforce 1-hour rate limit based on last completed scrape timestamp
+    elapsed = get_seconds_since_last_scrape()
+    if elapsed is not None and elapsed < SCRAPE_COOLDOWN_SECONDS:
+        remaining_mins = max(1, int((SCRAPE_COOLDOWN_SECONDS - elapsed) / 60))
+        return jsonify({
+            "status": "rate_limited",
+            "message": f"Scraper can only run once every hour. Cooldown active for {remaining_mins} more minute(s)."
+        }), 429
+
     t = threading.Thread(target=run_scrape_background, daemon=True)
     t.start()
-    return jsonify({"status": "started", "message": "Background scrape started"}), 202
+    return jsonify({
+        "status": "started",
+        "message": "Background scrape started successfully across TradeMe and Facebook Marketplace."
+    }), 202
 
 
 def start_auto_scheduler(interval_hours):
@@ -231,5 +273,9 @@ if __name__ == "__main__":
         start_auto_scheduler(auto_hours)
 
     print(f"Starting Polestar 2 API server on port {port}...")
-    print("Auth: Bearer token required (API_TOKEN)")
+    if API_TOKEN:
+        print("Auth: Bearer token active for secured administrative endpoints (API_TOKEN set)")
+    else:
+        print("Auth: Open local dev mode (API_TOKEN not set)")
+    print("Scraper endpoint: POST /scrape (enforced 1/hour rate limit, no credentials required)")
     app.run(host="0.0.0.0", port=port, debug=False)
