@@ -55,7 +55,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const inspectFavBtn = document.getElementById("inspectFavBtn");
   const inspectExternalLink = document.getElementById("inspectExternalLink");
 
+  // Compare Tray & Modal Elements
+  const compareBar = document.getElementById("compareBar");
+  const compareCountBadge = document.getElementById("compareCountBadge");
+  const compareThumbs = document.getElementById("compareThumbs");
+  const clearCompareBtn = document.getElementById("clearCompareBtn");
+  const launchCompareBtn = document.getElementById("launchCompareBtn");
+  const compareModal = document.getElementById("compareModal");
+  const compareModalBackdrop = document.getElementById("compareModalBackdrop");
+  const closeCompareModalBtn = document.getElementById("closeCompareModalBtn");
+  const compareTableContainer = document.getElementById("compareTableContainer");
+
   let activeInspectedId = null;
+  let compareList = [];
 
   // Safe localStorage helper to protect against corrupted state or private browsing errors
   function safeGetStorage(key, fallback) {
@@ -342,8 +354,223 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Event Delegation: Star toggle and Quick Inspect trigger
+  // Head-to-Head Compare Management
+  function updateCompareBarUI() {
+    if (compareList.length === 0) {
+      compareBar.style.display = "none";
+      return;
+    }
+
+    compareBar.style.display = "block";
+    compareCountBadge.textContent = `${compareList.length} / 3`;
+
+    const selectedCars = listings.filter(i => compareList.includes(i.id));
+    compareThumbs.innerHTML = selectedCars.map(car => {
+      const src = car.image ? sanitizeUrl(car.image) : '';
+      return src
+        ? `<img class="compare-mini-thumb" src="${src}" alt="Vehicle" referrerpolicy="no-referrer">`
+        : `<div class="compare-mini-thumb" style="display:flex;align-items:center;justify-content:center;font-size:10px;">⚡</div>`;
+    }).join("");
+  }
+
+  function toggleCompare(id) {
+    if (compareList.includes(id)) {
+      compareList = compareList.filter(item => item !== id);
+    } else {
+      if (compareList.length >= 3) {
+        alert("You can compare up to 3 Polestar 2 vehicles side-by-side.");
+        return;
+      }
+      compareList.push(id);
+    }
+    updateCompareBarUI();
+    renderListings();
+  }
+
+  clearCompareBtn.addEventListener("click", () => {
+    compareList = [];
+    updateCompareBarUI();
+    renderListings();
+  });
+
+  function openCompareModal() {
+    if (compareList.length < 2) {
+      alert("Please select at least 2 vehicles to compare.");
+      return;
+    }
+
+    const cars = listings.filter(i => compareList.includes(i.id));
+    const processed = cars.map(car => {
+      const model = getModel(car);
+      const specs = TRIM_SPECS[model] || TRIM_SPECS["Polestar 2"];
+      const packs = detectPacks(car.title);
+      const price = car._numericPrice;
+      const batteryCapacity = model === "SRSM" ? 69 : 78;
+      const costPerKwh = price > 0 ? Math.round(price / batteryCapacity) : 0;
+
+      return {
+        ...car,
+        model,
+        specs,
+        packs,
+        price,
+        batteryCapacity,
+        costPerKwh
+      };
+    });
+
+    const minPrice = Math.min(...processed.map(c => c.price).filter(p => p > 0));
+
+    let html = `
+      <table class="compare-diff-table">
+        <thead>
+          <tr>
+            <th class="metric-col-title">Vehicle</th>
+            ${processed.map(c => `
+              <th>
+                <div class="compare-car-col-header">
+                  ${c.image ? `<img class="compare-car-thumb" src="${sanitizeUrl(c.image)}" alt="Thumbnail" referrerpolicy="no-referrer">` : ''}
+                  <div class="compare-car-price ${c.price === minPrice ? 'compare-val-best' : ''}">
+                    ${escapeHtml(c.price_str || c.price)}
+                    ${c.price === minPrice ? '<span style="font-size:0.75rem;margin-left:4px;">(Lowest)</span>' : ''}
+                  </div>
+                  <div class="compare-car-title">${c._year ? `${c._year} ` : ''}${escapeHtml(c.title)}</div>
+                  <span class="tag-badge ${c.source === 'facebook' ? 'source-facebook' : 'source-trademe'}">
+                    ${c.source === 'facebook' ? 'Facebook' : 'TradeMe'}
+                  </span>
+                </div>
+              </th>
+            `).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="compare-row-section">
+            <td colspan="${processed.length + 1}">Pricing & Valuation Efficiency</td>
+          </tr>
+          <tr>
+            <td class="metric-col-title">Price / Battery Capacity</td>
+            ${processed.map(c => `
+              <td><strong>${c.costPerKwh > 0 ? `$${c.costPerKwh} / kWh` : 'N/A'}</strong></td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Price Drops Detected</td>
+            ${processed.map(c => `
+              <td>${c.price_drop > 0 ? `<span class="tag-badge tag-drop">-${formatCurrency(c.price_drop)}</span>` : '<span style="color:var(--text-tertiary);">None</span>'}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Location</td>
+            ${processed.map(c => `
+              <td>${escapeHtml(c.location || 'New Zealand')}</td>
+            `).join("")}
+          </tr>
+
+          <tr class="compare-row-section">
+            <td colspan="${processed.length + 1}">Drivetrain & Battery Architecture</td>
+          </tr>
+          <tr>
+            <td class="metric-col-title">Trim Classification</td>
+            ${processed.map(c => `
+              <td><span class="tag-badge tag-new">${c.model}</span></td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Battery Pack</td>
+            ${processed.map(c => `
+              <td>${c.specs.battery}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">WLTP Rated Range</td>
+            ${processed.map(c => `
+              <td>${c.specs.range}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Motor Output & 0-100</td>
+            ${processed.map(c => `
+              <td>${c.specs.power} · <em>${c.specs.accel}</em></td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">DC Fast Charging</td>
+            ${processed.map(c => `
+              <td>${c.specs.charging}</td>
+            `).join("")}
+          </tr>
+
+          <tr class="compare-row-section">
+            <td colspan="${processed.length + 1}">Detected Option Packs</td>
+          </tr>
+          <tr>
+            <td class="metric-col-title">Pilot / Pilot Lite Pack</td>
+            ${processed.map(c => `
+              <td>${c.packs.pilot ? '<span class="tag-badge tag-drop">✓ Included</span>' : '<span style="color:var(--text-tertiary);">—</span>'}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Plus Pack (Glass Roof / HK)</td>
+            ${processed.map(c => `
+              <td>${c.packs.plus ? '<span class="tag-badge tag-drop">✓ Included</span>' : '<span style="color:var(--text-tertiary);">—</span>'}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Performance Pack (Öhlins)</td>
+            ${processed.map(c => `
+              <td>${c.packs.perf ? '<span class="tag-badge tag-new">✓ Öhlins DFV</span>' : '<span style="color:var(--text-tertiary);">—</span>'}</td>
+            `).join("")}
+          </tr>
+          <tr>
+            <td class="metric-col-title">Towbar / Hitch</td>
+            ${processed.map(c => `
+              <td>${c.packs.tow ? '<span class="tag-badge tag-drop">✓ Fitted</span>' : '<span style="color:var(--text-tertiary);">—</span>'}</td>
+            `).join("")}
+          </tr>
+
+          <tr>
+            <td class="metric-col-title">Action</td>
+            ${processed.map(c => `
+              <td>
+                <a href="${sanitizeUrl(c.url)}" target="_blank" rel="noopener noreferrer" class="btn-open-source" style="font-size:0.75rem;height:34px;">
+                  Open Listing ↗
+                </a>
+              </td>
+            `).join("")}
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+    compareTableContainer.innerHTML = html;
+    if (document.startViewTransition) {
+      document.startViewTransition(() => compareModal.showModal());
+    } else {
+      compareModal.showModal();
+    }
+  }
+
+  function closeCompareModal() {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => compareModal.close());
+    } else {
+      compareModal.close();
+    }
+  }
+
+  launchCompareBtn.addEventListener("click", openCompareModal);
+  closeCompareModalBtn.addEventListener("click", closeCompareModal);
+  compareModalBackdrop.addEventListener("click", closeCompareModal);
+
+  // Event Delegation: Star toggle, Compare toggle, and Quick Inspect trigger
   container.addEventListener('click', (e) => {
+    const compBtn = e.target.closest('.compare-toggle-btn');
+    if (compBtn) {
+      const id = compBtn.getAttribute('data-id');
+      toggleCompare(id);
+      return;
+    }
+
     const favBtn = e.target.closest('.fav-star-btn');
     if (favBtn) {
       const id = favBtn.getAttribute('data-id');
@@ -358,7 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Direct outbound link or select shouldn't trigger inspect
-    if (e.target.closest('.view-link-btn') || e.target.closest('.trim-select')) {
+    if (e.target.closest('.view-link-btn') || e.target.closest('.trim-select') || e.target.closest('.compare-toggle-btn')) {
       return;
     }
 
@@ -589,6 +816,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <!-- Actions -->
           <div class="v-actions">
+            <button class="compare-toggle-btn ${compareList.includes(item.id) ? 'selected' : ''}" data-id="${safeId}" aria-label="Compare vehicle" title="Compare side-by-side (up to 3)">
+              <span>${compareList.includes(item.id) ? '✓ Diff' : '+ Diff'}</span>
+            </button>
             <button class="fav-star-btn ${isFav ? 'active' : ''}" data-id="${safeId}" aria-label="Save vehicle" title="Save to favorites">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>

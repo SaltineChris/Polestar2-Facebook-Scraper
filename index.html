@@ -297,6 +297,43 @@
         </footer>
       </div>
     </dialog>
+
+    <!-- Head-to-Head Compare Tray Floating Bar -->
+    <div id="compareBar" class="compare-bar" style="display: none;">
+      <div class="compare-bar-content">
+        <div class="compare-bar-info">
+          <span class="compare-bar-badge" id="compareCountBadge">0 / 3</span>
+          <span class="compare-bar-label">Vehicles selected for comparison</span>
+        </div>
+        <div class="compare-bar-thumbs" id="compareThumbs"></div>
+        <div class="compare-bar-actions">
+          <button class="pill" id="clearCompareBtn">Clear</button>
+          <button class="pill active" id="launchCompareBtn">Compare Specs →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Head-to-Head Compare Modal Dialog -->
+    <dialog id="compareModal" class="compare-modal" aria-labelledby="compareModalTitle">
+      <div class="compare-modal-backdrop" id="compareModalBackdrop"></div>
+      <div class="compare-modal-panel">
+        <header class="compare-modal-header">
+          <div>
+            <h2 id="compareModalTitle">Side-by-Side Spec Diff</h2>
+            <p class="compare-modal-sub">Comparing valuation metrics, battery, efficiency, and option packs</p>
+          </div>
+          <button class="icon-btn close-btn" id="closeCompareModalBtn" aria-label="Close Comparison">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+        <div class="compare-table-wrapper" id="compareTableContainer">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </dialog>
   </div>
 
   <!-- Data Script -->
