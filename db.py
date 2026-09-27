@@ -278,7 +278,6 @@ def upsert_scraped_listing(conn: sqlite3.Connection, item: dict) -> dict:
                     image = ?,
                     source = ?,
                     last_seen = ?,
-                    scraped_at = ?,
                     is_active = 1,
                     is_new = 0
                 WHERE id = ?
@@ -294,7 +293,6 @@ def upsert_scraped_listing(conn: sqlite3.Connection, item: dict) -> dict:
                 item.get("image") or existing["image"],
                 item.get("source", existing["source"]),
                 now_iso,
-                now_iso,
                 item_id
             ))
 
@@ -303,7 +301,7 @@ def upsert_scraped_listing(conn: sqlite3.Connection, item: dict) -> dict:
     res["price_drop"] = price_drop
     res["previous_price"] = prev_price_str
     res["previous_price_num"] = prev_price_num
-    res["scraped_at"] = now_iso
+    res["scraped_at"] = existing["scraped_at"] if existing else now_iso
     return res
 
 
