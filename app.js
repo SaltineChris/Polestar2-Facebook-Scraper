@@ -28,6 +28,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const depreciationYearContainer = document.getElementById("depreciationYearContainer");
   const regionalBreakdownContainer = document.getElementById("regionalBreakdownContainer");
 
+  // Inspect Dialog Elements
+  const inspectDialog = document.getElementById("inspectDialog");
+  const inspectBackdrop = document.getElementById("inspectBackdrop");
+  const closeInspectBtn = document.getElementById("closeInspectBtn");
+  const inspectTitle = document.getElementById("inspectTitle");
+  const inspectPrice = document.getElementById("inspectPrice");
+  const inspectPrevPrice = document.getElementById("inspectPrevPrice");
+  const inspectDropBadge = document.getElementById("inspectDropBadge");
+  const inspectLocation = document.getElementById("inspectLocation");
+  const inspectDate = document.getElementById("inspectDate");
+  const inspectImageContainer = document.getElementById("inspectImageContainer");
+  const inspectTrimBadge = document.getElementById("inspectTrimBadge");
+  const inspectSourceBadge = document.getElementById("inspectSourceBadge");
+  const inspectYear = document.getElementById("inspectYear");
+  const specBattery = document.getElementById("specBattery");
+  const specBatteryChem = document.getElementById("specBatteryChem");
+  const specRange = document.getElementById("specRange");
+  const specPower = document.getElementById("specPower");
+  const spec0to100 = document.getElementById("spec0to100");
+  const specCharging = document.getElementById("specCharging");
+  const packPilot = document.getElementById("packPilot");
+  const packPlus = document.getElementById("packPlus");
+  const packPerf = document.getElementById("packPerf");
+  const packTow = document.getElementById("packTow");
+  const inspectFavBtn = document.getElementById("inspectFavBtn");
+  const inspectExternalLink = document.getElementById("inspectExternalLink");
+
+  let activeInspectedId = null;
+
   // State
   let rawListings = window.marketplaceListings || [];
   const meta = window.lastRunMeta || {};
@@ -124,11 +153,182 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Event Delegation: Star toggle
+  // Equipment / Option Pack Detectors
+  function detectPacks(title) {
+    const t = (title || "").toLowerCase();
+    return {
+      pilot: t.includes("pilot") || t.includes("adaptive cruise") || t.includes("pixel"),
+      plus: t.includes("plus") || t.includes("harman") || t.includes("glass roof") || t.includes("panoramic"),
+      perf: t.includes("performance") || t.includes("ohlins") || t.includes("öhlins") || t.includes("brembo") || t.includes("bst"),
+      tow: t.includes("tow") || t.includes("hitch") || t.includes("towbar")
+    };
+  }
+
+  // Model Specs Database for Polestar 2
+  const TRIM_SPECS = {
+    "SRSM": {
+      battery: "69 kWh (67 kWh usable)",
+      chem: "Lithium-ion NMC 400V",
+      range: "478 km WLTP (~410 km real-world)",
+      power: "170 kW / 231 hp (Single Motor FWD/RWD)",
+      accel: "0–100 km/h: 7.4s",
+      charging: "135 kW Peak (10–80% ~32m)"
+    },
+    "LRSM": {
+      battery: "78–82 kWh (75–79 kWh usable)",
+      chem: "Lithium-ion NMC 400V",
+      range: "551–655 km WLTP (~510 km real-world)",
+      power: "170–220 kW / 231–299 hp (Single Motor)",
+      accel: "0–100 km/h: 6.2–7.4s",
+      charging: "155–205 kW Peak (10–80% ~28m)"
+    },
+    "LRDM": {
+      battery: "78–82 kWh (75–79 kWh usable)",
+      chem: "Dual Motor AWD 400V",
+      range: "487–593 km WLTP (~460 km real-world)",
+      power: "300–310 kW / 408–421 hp",
+      accel: "0–100 km/h: 4.5–4.7s",
+      charging: "155–205 kW Peak (10–80% ~28m)"
+    },
+    "Performance": {
+      battery: "78–82 kWh (Öhlins DFV Dampers)",
+      chem: "Dual Motor Performance Pack",
+      range: "467–568 km WLTP (~435 km real-world)",
+      power: "350 kW / 476 hp (680 Nm)",
+      accel: "0–100 km/h: 4.2s (Brembo 4-piston)",
+      charging: "155–205 kW Peak (10–80% ~28m)"
+    },
+    "Polestar 2": {
+      battery: "69–78 kWh Lithium-ion",
+      chem: "Polestar 2 EV Platform",
+      range: "~480 km WLTP (~420 km real-world)",
+      power: "170–300 kW (Electric)",
+      accel: "0–100 km/h: 4.7–7.4s",
+      charging: "135–155 kW Peak"
+    }
+  };
+
+  function openInspect(item) {
+    activeInspectedId = item.id;
+    const model = getModel(item);
+    const specs = TRIM_SPECS[model] || TRIM_SPECS["Polestar 2"];
+    const packs = detectPacks(item.title);
+    const isFav = favorites.includes(item.id);
+
+    inspectTitle.textContent = item.title;
+    inspectPrice.textContent = item.price;
+    inspectLocation.textContent = item.location || "New Zealand";
+    inspectDate.textContent = `Scraped ${formatDate(item.scraped_at)}`;
+    inspectYear.textContent = item._year ? `${item._year}` : "Polestar 2";
+
+    if (item.previous_price && item.price_drop > 0) {
+      inspectPrevPrice.textContent = item.previous_price;
+      inspectPrevPrice.style.display = "inline";
+      inspectDropBadge.textContent = `-${formatCurrency(item.price_drop)}`;
+      inspectDropBadge.style.display = "inline-flex";
+    } else {
+      inspectPrevPrice.style.display = "none";
+      inspectDropBadge.style.display = "none";
+    }
+
+    if (item.image) {
+      const safeImg = sanitizeUrl(item.image);
+      const safeAlt = escapeHtml(item.title);
+      inspectImageContainer.innerHTML = `<img src="${safeImg}" alt="${safeAlt}" referrerpolicy="no-referrer">`;
+    } else {
+      inspectImageContainer.innerHTML = `
+        <div class="v-thumb-fallback" style="width:100%;height:100%;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </div>
+      `;
+    }
+
+    inspectSourceBadge.textContent = item.source === "facebook" ? "Facebook Marketplace" : "TradeMe Motors";
+    inspectSourceBadge.className = `tag-badge ${item.source === "facebook" ? "source-facebook" : "source-trademe"}`;
+
+    inspectTrimBadge.textContent = model;
+    inspectTrimBadge.className = "tag-badge tag-new";
+
+    // Specs
+    specBattery.textContent = specs.battery;
+    specBatteryChem.textContent = specs.chem;
+    specRange.textContent = specs.range;
+    specPower.textContent = specs.power;
+    spec0to100.textContent = specs.accel;
+    specCharging.textContent = specs.charging;
+
+    // Packs
+    packPilot.classList.toggle("detected", packs.pilot);
+    packPlus.classList.toggle("detected", packs.plus);
+    packPerf.classList.toggle("detected", packs.perf);
+    packTow.classList.toggle("detected", packs.tow);
+
+    // Links & Fav
+    inspectExternalLink.href = sanitizeUrl(item.url);
+    updateInspectFavUI(isFav);
+
+    // Progressive Enhancement: View Transitions API
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        inspectDialog.showModal();
+      });
+    } else {
+      inspectDialog.showModal();
+    }
+  }
+
+  function closeInspect() {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        inspectDialog.close();
+      });
+    } else {
+      inspectDialog.close();
+    }
+  }
+
+  function updateInspectFavUI(isFav) {
+    const starSvg = inspectFavBtn.querySelector("svg");
+    if (isFav) {
+      inspectFavBtn.classList.add("active");
+      starSvg.setAttribute("fill", "currentColor");
+    } else {
+      inspectFavBtn.classList.remove("active");
+      starSvg.setAttribute("fill", "none");
+    }
+  }
+
+  inspectBackdrop.addEventListener("click", closeInspect);
+  closeInspectBtn.addEventListener("click", closeInspect);
+
+  inspectFavBtn.addEventListener("click", () => {
+    if (!activeInspectedId) return;
+    if (favorites.includes(activeInspectedId)) {
+      favorites = favorites.filter(favId => favId !== activeInspectedId);
+    } else {
+      favorites.push(activeInspectedId);
+    }
+    localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
+    updateInspectFavUI(favorites.includes(activeInspectedId));
+    renderListings();
+  });
+
+  // Hotkey support for closing inspection
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && inspectDialog.open) {
+      closeInspect();
+    }
+  });
+
+  // Event Delegation: Star toggle and Quick Inspect trigger
   container.addEventListener('click', (e) => {
-    const btn = e.target.closest('.fav-star-btn');
-    if (btn) {
-      const id = btn.getAttribute('data-id');
+    const favBtn = e.target.closest('.fav-star-btn');
+    if (favBtn) {
+      const id = favBtn.getAttribute('data-id');
       if (favorites.includes(id)) {
         favorites = favorites.filter(favId => favId !== id);
       } else {
@@ -136,6 +336,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       localStorage.setItem('polestar_favorites', JSON.stringify(favorites));
       renderListings();
+      return;
+    }
+
+    // Direct outbound link or select shouldn't trigger inspect
+    if (e.target.closest('.view-link-btn') || e.target.closest('.trim-select')) {
+      return;
+    }
+
+    // Clicking anywhere on thumbnail or title opens Quick Inspect sheet
+    const row = e.target.closest('.vehicle-row');
+    if (row) {
+      const id = row.getAttribute('data-id');
+      const item = listings.find(i => i.id === id);
+      if (item) {
+        e.preventDefault();
+        openInspect(item);
+      }
     }
   });
 
@@ -289,7 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       return `
-        <article class="vehicle-row">
+        <article class="vehicle-row" data-id="${safeId}">
           <!-- Thumbnail -->
           <div class="v-thumb-wrap">
             ${thumbImg}

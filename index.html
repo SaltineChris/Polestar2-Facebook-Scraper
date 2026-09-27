@@ -197,6 +197,98 @@
         </div>
       </section>
     </main>
+
+    <!-- Morphing Quick-Inspect Sheet -->
+    <dialog id="inspectDialog" class="inspect-dialog" aria-labelledby="inspectTitle">
+      <div class="inspect-backdrop" id="inspectBackdrop"></div>
+      <div class="inspect-panel" id="inspectPanel">
+        <header class="inspect-header">
+          <div class="inspect-trim-wrap">
+            <span class="tag-badge" id="inspectSourceBadge">Source</span>
+            <span class="tag-badge" id="inspectTrimBadge">SRSM</span>
+            <span class="inspect-year" id="inspectYear">2023</span>
+          </div>
+          <button class="icon-btn close-btn" id="closeInspectBtn" aria-label="Close Inspector">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <div class="inspect-hero">
+          <div class="inspect-image-wrap" id="inspectImageContainer"></div>
+          <div class="inspect-title-block">
+            <h2 id="inspectTitle">Polestar 2</h2>
+            <div class="inspect-price-bar">
+              <span class="inspect-price" id="inspectPrice">$0</span>
+              <span class="inspect-prev-price" id="inspectPrevPrice"></span>
+              <span class="tag-badge tag-drop" id="inspectDropBadge" style="display:none;"></span>
+            </div>
+            <div class="inspect-location-line">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span id="inspectLocation">New Zealand</span>
+              <span class="bullet">·</span>
+              <span id="inspectDate">Listed recently</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Telemetry & Pack Spec Grid -->
+        <div class="inspect-spec-grid">
+          <div class="spec-cell">
+            <span class="spec-label">Battery Architecture</span>
+            <span class="spec-value" id="specBattery">69 kWh (Usable 67)</span>
+            <span class="spec-sub" id="specBatteryChem">Lithium-ion 400V</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">WLTP Rated Range</span>
+            <span class="spec-value" id="specRange">~478 km</span>
+            <span class="spec-sub">Real-world NZ: ~410 km</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Drivetrain Output</span>
+            <span class="spec-value" id="specPower">170 kW (231 hp)</span>
+            <span class="spec-sub" id="spec0to100">0-100 km/h: 7.4s</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Max DC Fast Charge</span>
+            <span class="spec-value" id="specCharging">135 kW Peak</span>
+            <span class="spec-sub">10-80% in ~32 mins</span>
+          </div>
+        </div>
+
+        <!-- Option Pack Detection Indicators -->
+        <div class="inspect-packs-section">
+          <div class="packs-title">Equipment & Pack Detection</div>
+          <div class="packs-row" id="inspectPacksRow">
+            <div class="pack-chip" id="packPilot">Pilot / Pilot Lite Pack</div>
+            <div class="pack-chip" id="packPlus">Plus Pack (Glass Roof / HK)</div>
+            <div class="pack-chip" id="packPerf">Performance Pack (Öhlins)</div>
+            <div class="pack-chip" id="packTow">Towbar / Hitch</div>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <footer class="inspect-footer">
+          <button class="icon-btn fav-btn-lg" id="inspectFavBtn" aria-label="Toggle Favorite">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </button>
+          <a id="inspectExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-open-source">
+            <span>Open Original Listing</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+        </footer>
+      </div>
+    </dialog>
   </div>
 
   <!-- Data Script -->
