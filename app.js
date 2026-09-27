@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const statLastChecked = document.getElementById("statLastChecked");
   const refreshBtn = document.getElementById("refreshBtn");
   const themeToggleBtn = document.getElementById("themeToggleBtn");
+  const triggerScrapeBtn = document.getElementById("triggerScrapeBtn");
+  const triggerScrapeText = document.getElementById("triggerScrapeText");
 
   const tabBtns = document.querySelectorAll(".view-btn");
   const tabViews = document.querySelectorAll(".tab-view");
@@ -1050,7 +1052,112 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.reload();
   });
 
+  // ==========================================================================
+  // Update Scraper Controller with 1-Hour Cooldown Enforcement
+  // ==========================================================================
+  const ONE_HOUR_MS = 60 * 60 * 1000;
+  let cooldownTimer = null;
+
+  function updateScrapeCooldownUI() {
+    const lastScrapeTrigger = parseInt(safeGetStorage("polestar_last_manual_scrape", "0"), 10);
+    const now = Date.now();
+    const elapsed = now - lastScrapeTrigger;
+
+    if (elapsed < ONE_HOUR_MS) {
+      const remainingMs = ONE_HOUR_MS - elapsed;
+      const remainingMins = Math.ceil(remainingMs / (60 * 1000));
+      triggerScrapeBtn.disabled = true;
+      triggerScrapeText.textContent = `Wait ${remainingMins}m`;
+      triggerScrapeBtn.title = `Scraper can only run once every hour. Cooldown active for ${remainingMins} more minute(s).`;
+      return true;
+    } else {
+      triggerScrapeBtn.disabled = false;
+      triggerScrapeText.textContent = "Update Scraper";
+      triggerScrapeBtn.title = "Force an immediate background scrape run (max 1/hr)";
+      if (cooldownTimer) {
+        clearInterval(cooldownTimer);
+        cooldownTimer = null;
+      }
+      return false;
+    }
+  }
+
+  function startCooldownTracker() {
+    if (cooldownTimer) clearInterval(cooldownTimer);
+    updateScrapeCooldownUI();
+    cooldownTimer = setInterval(updateScrapeCooldownUI, 10000); // Check every 10s
+  }
+
+  triggerScrapeBtn.addEventListener("click", async () => {
+    if (updateScrapeCooldownUI()) {
+      return;
+    }
+
+    // Confirmation
+    const confirmed = confirm("Run Polestar 2 live scrape now across TradeMe Motors and Facebook Marketplace?\n\nNote: This can only be run once per hour.");
+    if (!confirmed) return;
+
+    // Check if user has configured API URL or prompt
+    let apiUrl = safeGetStorage("polestar_api_url", "");
+    let apiToken = safeGetStorage("polestar_api_token", "");
+
+    if (!apiUrl) {
+      const inputUrl = prompt(
+        "Enter your Polestar 2 API URL (e.g. https://your-rpi.local:5000 or Cloudflare Tunnel):\n\nLeave empty if running locally on localhost:5000",
+        "http://localhost:5000"
+      );
+      if (!inputUrl) return;
+      apiUrl = inputUrl.trim().replace(/\/+$/, "");
+      safeSetStorage("polestar_api_url", apiUrl);
+    }
+
+    if (!apiToken) {
+      const inputToken = prompt("Enter your API Bearer Token (set in API_TOKEN on your server):");
+      if (!inputToken) return;
+      apiToken = inputToken.trim();
+      safeSetStorage("polestar_api_token", apiToken);
+    }
+
+    triggerScrapeBtn.disabled = true;
+    triggerScrapeBtn.classList.add("scraping");
+    triggerScrapeText.textContent = "Scraping...";
+
+    try {
+      const res = await fetch(`${apiUrl}/scrape`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiToken}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (res.status === 202) {
+        safeSetStorage("polestar_last_manual_scrape", Date.now().toString());
+        startCooldownTracker();
+        alert("Scrape successfully started in background!\n\nYour scraper is now checking Facebook Marketplace and TradeMe Motors for active Polestar 2 cars. Once finished, data will update automatically.");
+      } else if (res.status === 409) {
+        alert("A scrape is already currently in progress on the server. Please wait for it to complete.");
+      } else if (res.status === 429) {
+        safeSetStorage("polestar_last_manual_scrape", Date.now().toString());
+        startCooldownTracker();
+        alert("Rate limit reached: Scraper can only run once every hour.");
+      } else if (res.status === 401) {
+        safeSetStorage("polestar_api_token", "");
+        alert("Unauthorized: Invalid API Bearer Token. Please try again.");
+      } else {
+        alert(`Server responded with status HTTP ${res.status}.`);
+      }
+    } catch (err) {
+      console.error("Scrape trigger failed:", err);
+      alert(`Could not connect to API server at ${apiUrl}.\n\nEnsure your API server is running (python api_server.py) and reachable.`);
+    } finally {
+      triggerScrapeBtn.classList.remove("scraping");
+      updateScrapeCooldownUI();
+    }
+  });
+
   // Init
+  startCooldownTracker();
   updateMetrics();
   renderListings();
 });

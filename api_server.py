@@ -177,7 +177,7 @@ def run_scrape_background():
 
 @app.route("/scrape", methods=["POST"])
 @require_token
-@limiter.limit("3 per hour")
+@limiter.limit("1 per hour")
 def trigger_scrape():
     """Trigger an immediate background scrape run."""
     if is_scraping:

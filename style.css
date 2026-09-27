@@ -303,6 +303,43 @@ body {
   border-color: var(--border-medium);
 }
 
+/* Force Update Scraper Button */
+.btn-update-scraper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0 0.75rem;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-update-scraper:hover:not(:disabled) {
+  background: var(--bg-surface-hover);
+  border-color: var(--accent-gold-border);
+  color: var(--accent-gold);
+}
+
+.btn-update-scraper:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  border-color: var(--border-subtle);
+  color: var(--text-tertiary);
+}
+
+.btn-update-scraper.scraping .scrape-spin-icon {
+  animation: spin 0.8s linear infinite;
+  color: var(--accent-gold);
+}
+
 /* Theme Icon logic */
 [data-theme="dark"] .theme-icon-sun { display: block; }
 [data-theme="dark"] .theme-icon-moon { display: none; }
