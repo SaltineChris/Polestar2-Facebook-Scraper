@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' http://localhost:5000 http://127.0.0.1:5000 https:; base-uri 'self';">
   <title>Polestar 2 NZ — Vehicle Tracker</title>
   
   <!-- Scandinavian Clean Sans Face -->
@@ -94,36 +95,40 @@
 
     <!-- Sticky Filter & View Nav Bar -->
     <nav class="sticky-nav">
-      <div class="search-wrap">
-        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="search" id="searchInput" placeholder="Filter by trim, price, location, year..." autocomplete="off" spellcheck="false">
+      <div class="nav-search-bar">
+        <div class="search-wrap">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="search" id="searchInput" placeholder="Filter by trim, price, location, year..." autocomplete="off" spellcheck="false">
+        </div>
+
+        <!-- View Switcher -->
+        <div class="view-switch">
+          <button class="view-btn active" data-tab="listings">Feed</button>
+          <button class="view-btn" data-tab="analytics">Market Insights</button>
+        </div>
       </div>
 
-      <!-- Quick Filter Pills -->
-      <div class="pill-group" id="timeFilters" role="tablist">
-        <button class="pill active" data-filter="all">All Vehicles</button>
-        <button class="pill" data-filter="drops">Price Drops</button>
-        <button class="pill" data-filter="favorites">Saved ★</button>
-        <button class="pill" data-filter="new">New</button>
-        <button class="pill" data-filter="recent">Last 3 Days</button>
-      </div>
+      <div class="nav-filters-scroll">
+        <!-- Quick Filter Pills -->
+        <div class="pill-group" id="timeFilters" role="tablist">
+          <button class="pill active" data-filter="all">All Vehicles</button>
+          <button class="pill" data-filter="drops">Price Drops</button>
+          <button class="pill" data-filter="favorites">Saved ★</button>
+          <button class="pill" data-filter="new">New</button>
+          <button class="pill" data-filter="recent">Last 3 Days</button>
+        </div>
 
-      <div class="pill-divider"></div>
+        <div class="pill-divider"></div>
 
-      <!-- Source Pills -->
-      <div class="pill-group" id="sourceFilters">
-        <button class="pill active" data-source="all">All Sources</button>
-        <button class="pill" data-source="trademe">TradeMe</button>
-        <button class="pill" data-source="facebook">Facebook</button>
-      </div>
-
-      <!-- View Switcher -->
-      <div class="view-switch">
-        <button class="view-btn active" data-tab="listings">Feed</button>
-        <button class="view-btn" data-tab="analytics">Market Insights</button>
+        <!-- Source Pills -->
+        <div class="pill-group" id="sourceFilters">
+          <button class="pill active" data-source="all">All Sources</button>
+          <button class="pill" data-source="trademe">TradeMe</button>
+          <button class="pill" data-source="facebook">Facebook</button>
+        </div>
       </div>
     </nav>
 

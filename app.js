@@ -105,20 +105,27 @@ document.addEventListener("DOMContentLoaded", () => {
     return isNaN(num) ? 0 : num;
   }
 
-  // Security: HTML Escape
+  // Security: HTML Escape (including single and double quotes for safe attribute interpolation)
   function escapeHtml(str) {
-    if (!str) return "";
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
+    if (str === null || str === undefined) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   // Security: URL sanitizer
   function sanitizeUrl(url) {
     if (!url) return "#";
-    const trimmed = url.trim();
-    if (trimmed.startsWith("https://") || trimmed.startsWith("http://")) {
-      return trimmed;
+    try {
+      const parsed = new URL(String(url).trim());
+      if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+        return escapeHtml(parsed.href);
+      }
+    } catch {
+      // Invalid URL falls back to "#"
     }
     return "#";
   }
@@ -133,9 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Polestar 2";
   }
 
+  const VALID_TRIMS = new Set(["Polestar 2", "SRSM", "LRSM", "LRDM", "Performance"]);
+
   function getModel(item) {
-    if (modelOverrides[item.id]) {
-      return modelOverrides[item.id];
+    const override = modelOverrides[item.id];
+    if (override && VALID_TRIMS.has(override)) {
+      return override;
     }
     return item._model || classifyModel(item.title);
   }
@@ -474,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <tr>
             <td class="metric-col-title">Trim Classification</td>
             ${processed.map(c => `
-              <td><span class="tag-badge tag-new">${c.model}</span></td>
+              <td><span class="tag-badge tag-new">${escapeHtml(c.model)}</span></td>
             `).join("")}
           </tr>
           <tr>
@@ -621,6 +631,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Event Delegation: Thumbnail load fallback (CSP-safe replacement for inline onerror)
+  container.addEventListener('error', (e) => {
+    if (e.target && e.target.classList && e.target.classList.contains('v-thumb')) {
+      e.target.style.display = 'none';
+      if (e.target.nextElementSibling) {
+        e.target.nextElementSibling.style.display = 'flex';
+      }
+    }
+  }, true);
+
   // Formatter: Date in NZT
   function formatDate(isoString) {
     if (!isoString) return "—";
@@ -758,7 +778,7 @@ document.addEventListener("DOMContentLoaded", () => {
         : '';
 
       const thumbImg = item.image
-        ? `<img class="v-thumb" src="${safeImage}" referrerpolicy="no-referrer" alt="${safeTitle}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
+        ? `<img class="v-thumb" src="${safeImage}" referrerpolicy="no-referrer" alt="${safeTitle}" loading="lazy" decoding="async">`
         : '';
 
       const thumbFallback = `
@@ -778,61 +798,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
       return `
         <article class="vehicle-row" data-id="${safeId}">
-          <!-- Thumbnail -->
-          <div class="v-thumb-wrap">
-            ${thumbImg}
-            ${thumbFallback}
-          </div>
-
-          <!-- Main Info -->
-          <div class="v-main">
-            <div class="v-title-row">
-              <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="v-title" title="${safeTitle}">
-                ${item._year ? `<span class="v-year-tag">${item._year}</span> ` : ''}${displayTitle}
-              </a>
-              <span class="tag-badge ${sourceClass}">${sourceLabel}</span>
-              <select class="trim-select" data-id="${safeId}" aria-label="Trim Variant">
-                ${trimOptions}
-              </select>
-              ${newBadge}
-              ${dropBadge}
+          <div class="v-lead">
+            <!-- Thumbnail -->
+            <div class="v-thumb-wrap">
+              ${thumbImg}
+              ${thumbFallback}
             </div>
 
-            <div class="v-meta-row">
-              <span class="v-location">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
+            <!-- Main Info -->
+            <div class="v-main">
+              <div class="v-title-row">
+                <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="v-title" title="${safeTitle}">
+                  ${item._year ? `<span class="v-year-tag">${item._year}</span> ` : ''}${displayTitle}
+                </a>
+                <span class="tag-badge ${sourceClass}">${sourceLabel}</span>
+                <select class="trim-select" data-id="${safeId}" aria-label="Trim Variant">
+                  ${trimOptions}
+                </select>
+                ${newBadge}
+                ${dropBadge}
+              </div>
+
+              <div class="v-meta-row">
+                <span class="v-location">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  ${safeLocation}
+                </span>
+                <span class="v-date">Listed: ${formatDate(item.scraped_at)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="v-footer">
+            <!-- Price -->
+            <div class="v-price-block">
+              <div class="v-price">${safePrice}</div>
+              ${prevPriceEl}
+            </div>
+
+            <!-- Actions -->
+            <div class="v-actions">
+              <button class="compare-toggle-btn ${compareList.includes(item.id) ? 'selected' : ''}" data-id="${safeId}" aria-label="Compare vehicle" title="Compare side-by-side (up to 3)">
+                <span>${compareList.includes(item.id) ? '✓ Diff' : '+ Diff'}</span>
+              </button>
+              <button class="fav-star-btn ${isFav ? 'active' : ''}" data-id="${safeId}" aria-label="Save vehicle" title="Save to favorites">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
-                ${safeLocation}
-              </span>
-              <span class="v-date">Listed: ${formatDate(item.scraped_at)}</span>
+              </button>
+              <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="view-link-btn" title="Open listing on source platform">
+                <span>View</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="7" y1="17" x2="17" y2="7"></line>
+                  <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+              </a>
             </div>
-          </div>
-
-          <!-- Price -->
-          <div class="v-price-block">
-            <div class="v-price">${safePrice}</div>
-            ${prevPriceEl}
-          </div>
-
-          <!-- Actions -->
-          <div class="v-actions">
-            <button class="compare-toggle-btn ${compareList.includes(item.id) ? 'selected' : ''}" data-id="${safeId}" aria-label="Compare vehicle" title="Compare side-by-side (up to 3)">
-              <span>${compareList.includes(item.id) ? '✓ Diff' : '+ Diff'}</span>
-            </button>
-            <button class="fav-star-btn ${isFav ? 'active' : ''}" data-id="${safeId}" aria-label="Save vehicle" title="Save to favorites">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-            </button>
-            <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="view-link-btn" title="Open listing on source platform">
-              <span>View</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </a>
           </div>
         </article>
       `;

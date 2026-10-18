@@ -25,8 +25,9 @@ jobs:
           RPI_API_TOKEN: ${{ secrets.RPI_API_TOKEN }}
         run: |
           echo "Fetching listings from RPi API..."
-          HTTP_STATUS=$(curl -o listings_raw.json -w "%{http_code}" -fsSL \
-            -H "Authorization: Bearer $RPI_API_TOKEN" \
+          HTTP_STATUS=$(printf 'header = "Authorization: Bearer %s"\n' "$RPI_API_TOKEN" | curl --config - \
+            -o listings_raw.json -w "%{http_code}" -fsS \
+            --proto '=https' \
             -H "Accept: application/json" \
             --connect-timeout 30 \
             --max-time 60 \

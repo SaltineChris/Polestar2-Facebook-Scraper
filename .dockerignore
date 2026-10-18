@@ -3,3 +3,13 @@ __pycache__
 .git
 .github
 *.log
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
+data/
+.venv/
+venv/
+.idea/
+.vscode/

@@ -48,7 +48,7 @@ SEARCH_TARGETS = [
     },
     {
         "name": "TradeMe Motors - National (New Zealand)",
-        "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2",
+        "url": "https://www.trademe.co.nz/a/motors/cars/polestar/2?rows=100",
         "source": "trademe"
     }
 ]
@@ -264,21 +264,20 @@ async def scrape_single_target(context, target: dict) -> list:
     return listings
 
 
-async def scrape_async():
+async def scrape_async(git_push: bool = None):
     """Run all target scrapes concurrently and persist to SQLite + static files."""
+    from contextlib import closing
     start_time = datetime.datetime.now()
     print(f"=== Starting Concurrent Polestar 2 Scraper at {start_time.isoformat()} ===")
 
-    conn = db.init_db()
+    launch_args = ["--disable-blink-features=AutomationControlled"]
+    if os.getenv("CHROMIUM_NO_SANDBOX") == "1" or os.path.exists("/.dockerenv"):
+        launch_args.extend(["--no-sandbox", "--disable-setuid-sandbox"])
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
             headless=True,
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--no-sandbox",
-                "--disable-setuid-sandbox"
-            ]
+            args=launch_args
         )
 
         context = await browser.new_context(
@@ -312,34 +311,44 @@ async def scrape_async():
     price_drops = []
     new_by_source = {"facebook": 0, "trademe": 0}
 
-    for item in all_scraped:
-        updated = db.upsert_scraped_listing(conn, item)
-        if updated.get("is_new"):
-            new_additions.append(updated)
-            src = updated.get("source", "facebook")
-            new_by_source[src] = new_by_source.get(src, 0) + 1
-            print(f"[NEW LISTING] [{src.upper()}] {updated['title']} - {updated['price']}")
-        if (updated.get("price_drop") or 0) > 0:
-            price_drops.append(updated)
+    with closing(db.init_db()) as conn:
+        # Purge any non-vehicle/accessory items
+        db.purge_invalid_listings(conn)
 
-    now_utc = datetime.datetime.now(datetime.timezone.utc)
-    run_meta = {
-        "last_scraped": now_utc.isoformat(),
-        "new_facebook": new_by_source.get("facebook", 0),
-        "new_trademe": new_by_source.get("trademe", 0),
-        "price_drops": len(price_drops)
-    }
+        for item in all_scraped:
+            updated = db.upsert_scraped_listing(conn, item)
+            if updated.get("is_new"):
+                new_additions.append(updated)
+                src = updated.get("source", "facebook")
+                new_by_source[src] = new_by_source.get(src, 0) + 1
+                print(f"[NEW LISTING] [{src.upper()}] {updated['title']} - {updated['price']}")
+            if (updated.get("price_drop") or 0) > 0:
+                price_drops.append(updated)
 
-    meta = db.export_to_files(conn, run_meta)
-    db.record_scrape_run(conn, meta)
+        # Deactivate listings that are no longer valid / no longer listed on TradeMe
+        tm_scraped_ids = {item["id"] for item in all_scraped if item.get("source") == "trademe"}
+        if len(tm_scraped_ids) >= 5:  # Safeguard against network/scrape failure
+            db.deactivate_missing_listings(conn, "trademe", tm_scraped_ids)
+
+        now_utc = datetime.datetime.now(datetime.timezone.utc)
+        run_meta = {
+            "last_scraped": now_utc.isoformat(),
+            "new_facebook": new_by_source.get("facebook", 0),
+            "new_trademe": new_by_source.get("trademe", 0),
+            "price_drops": len(price_drops)
+        }
+
+        meta = db.export_to_files(conn, run_meta)
+        db.record_scrape_run(conn, meta)
 
     elapsed = (datetime.datetime.now() - start_time).total_seconds()
     print(f"=== Scrape completed in {elapsed:.1f}s ===")
     print(f"Saved {meta['total_facebook'] + meta['total_trademe']} total active listings.")
     print(f"New: {meta['new_facebook']} Facebook, {meta['new_trademe']} TradeMe. Price drops: {len(price_drops)}.")
 
-    # Git auto-push if configured and changes detected
-    if os.getenv("GITHUB_ACTIONS") != "true" and os.getenv("SKIP_GIT_PUSH") != "1":
+    # Git auto-push only when explicitly enabled via ENABLE_GIT_PUSH=1 and not disabled by caller
+    should_git_push = git_push if git_push is not None else (os.getenv("ENABLE_GIT_PUSH") == "1")
+    if should_git_push and os.getenv("GITHUB_ACTIONS") != "true" and os.getenv("SKIP_GIT_PUSH") != "1":
         import subprocess
         try:
             status = subprocess.run(["git", "status", "--porcelain", DATA_JSON_PATH, DATA_JS_PATH], capture_output=True, text=True)
@@ -357,9 +366,9 @@ async def scrape_async():
     return new_additions
 
 
-def scrape():
+def scrape(git_push: bool = None):
     """Synchronous entry point for callers like api_server.py or bat scripts."""
-    return asyncio.run(scrape_async())
+    return asyncio.run(scrape_async(git_push=git_push))
 
 
 if __name__ == "__main__":

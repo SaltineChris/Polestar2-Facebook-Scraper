@@ -305,6 +305,41 @@ def upsert_scraped_listing(conn: sqlite3.Connection, item: dict) -> dict:
     return res
 
 
+def deactivate_missing_listings(conn: sqlite3.Connection, source: str, active_ids: set) -> int:
+    """
+    Mark active listings of a given source as inactive if they are no longer found in scrape results.
+    Guards against accidental empty wipes by requiring active_ids to be non-empty.
+    """
+    if not active_ids:
+        return 0
+
+    placeholders = ",".join("?" for _ in active_ids)
+    query = f"""
+        UPDATE listings
+        SET is_active = 0
+        WHERE source = ? AND is_active = 1 AND id NOT IN ({placeholders})
+    """
+    with conn:
+        cur = conn.cursor()
+        cur.execute(query, [source] + list(active_ids))
+        deactivated = cur.rowcount
+    if deactivated > 0:
+        print(f"[CLEANUP] Deactivated {deactivated} {source} listing(s) no longer valid/active on platform.")
+    return deactivated
+
+
+def purge_invalid_listings(conn: sqlite3.Connection) -> int:
+    """Delete any junk listings (price < $20,000 or missing 'polestar' in title)."""
+    with conn:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM listings WHERE (price_num < 20000 AND price_num > 0) OR lower(title) NOT LIKE '%polestar%'")
+        purged = cur.rowcount
+    if purged > 0:
+        print(f"[CLEANUP] Purged {purged} invalid/junk listing(s) from database.")
+    return purged
+
+
+
 def get_all_listings(conn: sqlite3.Connection, source: str = None, price_drops_only: bool = False, min_price: int = None, max_price: int = None) -> list:
     """Retrieve all active listings with optional filtering."""
     query = "SELECT * FROM listings WHERE is_active = 1"
