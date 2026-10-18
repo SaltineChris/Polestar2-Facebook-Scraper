@@ -130,14 +130,11 @@ def serve_static(filename):
 def require_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not API_TOKEN:
-            if ALLOW_UNAUTHENTICATED_DEV:
-                return f(*args, **kwargs)
-            return jsonify({"error": "Server authentication not configured (API_TOKEN missing)"}), 503
-        auth = request.headers.get("Authorization", "")
-        expected = f"Bearer {API_TOKEN}"
-        if not hmac.compare_digest(auth.encode("utf-8"), expected.encode("utf-8")):
-            abort(401)
+        if API_TOKEN:
+            auth = request.headers.get("Authorization", "")
+            expected = f"Bearer {API_TOKEN}"
+            if not hmac.compare_digest(auth.encode("utf-8"), expected.encode("utf-8")):
+                abort(401)
         return f(*args, **kwargs)
     return decorated
 
